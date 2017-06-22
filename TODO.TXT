@@ -1,0 +1,12 @@
+BTW you should come up with a word-wrap system.  The goofy inconsistent
+wrapping is annoying.  I would build a pchar string in code (so that
+pchar doesn’t become part of the global segment), then pass that to
+(var) function that takes in pchar and dest string array, modifies the
+array of 80-col strings and returns the number of strings; this info can
+be used to build the menu.  Honor LF as a new line in the wrapping.
+Crib off of TOPBENCH.  As for what column to wrap, that should be based
+on size of text.  For example, should be determined by length of text
+with 74*22 being max width of 74.  Clamp result between 74 and 40
+minimum (so we don’t get 5-col-wide text windows that go down 22 lines).
+So if you only have 240 chars, that would look like 11, but clamped to
+40 it would be between 6-12 lines which is pleasing.
