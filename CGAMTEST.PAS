@@ -228,6 +228,25 @@ const
   labello2='  Black      Blue     Green      Cyan      Red     Magenta    Brown     Gray    ';
   labelhi1='   Dark     Light     Light     Light     Light     Light                       ';
   labelhi2='   Gray      Blue     Green      Cyan      Red     Magenta    Yellow    White   ';
+
+  blabels:array[0..15] of string[15]=(
+  'Black',
+  'Blue',
+  'Green',
+  'Cyan',
+  'Red',
+  'Magenta',
+  'Brown',
+  'Light Gray',
+  'Dark Gray',
+  'Light Blue',
+  'Light Green',
+  'Light Cyan',
+  'Light Red',
+  'Light Magenta',
+  'Yellow',
+  'White'
+  );
 var
   foo,fooattr:byte;
 begin
@@ -290,6 +309,41 @@ begin
 
   for foo:=0 to 7 do Screen.WritePlain((foo*10)+1,1,' Color #'+inttostr(foo));
   for foo:=8 to 15 do Screen.WritePlain((foo*10)+1,21,' Color #'+inttostr(foo));
+  Screen.WriteCenter(25,$0F,'Press any key to rearrange into horizontal bars.');
+  PauseUser;
+
+  Screen.clear($0f,#0);
+  for foo:=0 to 7 do begin
+    {build rotating text attribute byte}
+    asm
+      mov cl,4
+      mov al,foo
+      mov bl,al
+      shl al,cl
+      add bl,2 {shifting only one over makes some hard to read}
+      and bl,00001111b
+      or  al,bl
+      mov fooattr,al
+    end;
+    Screen.FillBox(1,foo+1,80,foo+1,fooattr,0);
+    Screen.WriteCenter(foo+1,fooattr,blabels[foo]);
+  end;
+  for foo:=8 to 15 do begin
+    {build rotating text attribute byte}
+    asm
+      mov cl,4
+      mov al,foo
+      mov bl,al
+      shl al,cl
+      add bl,2
+      and bl,00001111b
+      or  al,bl
+      mov fooattr,al
+    end;
+    Screen.FillBox(1,foo+1,80,foo+1,fooattr,0);
+    Screen.WriteCenter(foo+1,fooattr,blabels[foo]);
+  end;
+
   Screen.WriteCenter(25,$0F,'Press any key to exit.');
 
   PauseUser;
