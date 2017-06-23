@@ -312,40 +312,49 @@ begin
   Screen.WriteCenter(25,$0F,'Press any key to rearrange into horizontal bars.');
   PauseUser;
 
-  Screen.clear($0f,#0);
-  for foo:=0 to 7 do begin
-    {build rotating text attribute byte}
-    asm
-      mov cl,4
-      mov al,foo
-      mov bl,al
-      shl al,cl
-      add bl,2 {shifting only one over makes some hard to read}
-      and bl,00001111b
-      or  al,bl
-      mov fooattr,al
-    end;
-    Screen.FillBox(1,foo+1,80,foo+1,fooattr,0);
-    Screen.WriteCenter(foo+1,fooattr,blabels[foo]);
+  Screen.clear($0e,#0);
+  with screen do begin
+    fillbox(1,1,80,1,$00,0);
+    fillbox(1,2,80,2,$01,220);
+    fillbox(1,3,80,3,$11,0);
+
+    fillbox(1,4,80,4,$22,0);
+    fillbox(1,5,80,5,$23,220);
+    fillbox(1,6,80,6,$33,0);
+
+    fillbox(1,7,80,7,$44,0);
+    fillbox(1,8,80,8,$45,220);
+    fillbox(1,9,80,9,$55,0);
+
+    fillbox(1,10,80,10,$66,0);
+    fillbox(1,11,80,11,$67,220);
+    fillbox(1,12,80,12,$77,0);
+
+    fillbox(1,13,80,13,$88,0);
+    fillbox(1,14,80,14,$89,220);
+    fillbox(1,15,80,15,$99,0);
+
+    fillbox(1,16,80,16,$aa,0);
+    fillbox(1,17,80,17,$ab,220);
+    fillbox(1,18,80,18,$bb,0);
+
+    fillbox(1,19,80,19,$cc,0);
+    fillbox(1,20,80,20,$cd,220);
+    fillbox(1,21,80,21,$dd,0);
+
+    fillbox(1,22,80,22,$ee,0);
+    fillbox(1,23,80,23,$ef,220);
+    fillbox(1,24,80,24,$ff,0);
   end;
-  for foo:=8 to 15 do begin
-    {build rotating text attribute byte}
-    asm
-      mov cl,4
-      mov al,foo
-      mov bl,al
-      shl al,cl
-      add bl,2
-      and bl,00001111b
-      or  al,bl
-      mov fooattr,al
-    end;
-    Screen.FillBox(1,foo+1,80,foo+1,fooattr,0);
-    Screen.WriteCenter(foo+1,fooattr,blabels[foo]);
-  end;
+
+  Screen.WriteCenter(25,$0F,'Press any key to rearrange into vertical bars.');
+  PauseUser;
+  Screen.clear($0e,#0);
+
+  for foo:=0 to 15 do
+    Screen.FillBox((foo*5)+1,1,(foo*5)+5,24,(foo shl 4) OR foo,0);
 
   Screen.WriteCenter(25,$0F,'Press any key to exit.');
-
   PauseUser;
   m6845_SetMode(c_fast_char_clock+c_videosignal_enable+c_blinking_text);
   PostTest;

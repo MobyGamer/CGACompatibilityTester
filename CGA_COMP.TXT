@@ -200,6 +200,7 @@ Version History:
 1.23: Added horizontal and vertical lines to 40-col test for checking jitter.
 1.24: Fixed counter rollover bug in audio sync test.
 1.25: Added color bars monitor calibration plate back into the program.
+      Added two more bar patterns to the color plate.
 
 Possible future enhancements:
 - Add full "monochrome CGA" support (both main program and calibration: 5155,
