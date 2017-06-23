@@ -32,7 +32,7 @@ begin
   if interactive then begin
     with InfoPrompt do begin
       init(2,strpas(menuLookup[mCapMotion].title));
-      WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+      WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('This test plate consists of two moving lines,');
       AddLine('one horizontal and one vertical, that move at');
@@ -122,7 +122,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mCapBarsRGB].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This pattern consists of all sixteen RGB colors,');
     AddLine('displayed as a traditional color bars test plate');
@@ -161,7 +161,7 @@ begin
   if interactive then begin
     with InfoPrompt do begin
       init(2,strpas(menuLookup[mCapRGBI].title));
-      WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+      WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('This pattern consists of RED, GREEN, BLUE, and WHITE bars.');
       AddLine('The red, green, and blue bars use only the red/green/blue pins.');
@@ -204,7 +204,7 @@ begin
   if interactive then begin
     with InfoPrompt do begin
       init(2,strpas(menuLookup[mCapBarsComp].title));
-      WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+      WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('This pattern consists of 16 solid composite colors,');
       AddLine('displayed as a traditional color bars test plate');
@@ -352,7 +352,7 @@ begin
   if interactive then begin
     with InfoPrompt do begin
       init(2,strpas(menuLookup[mSync].title));
-      WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+      WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('This test sequence is designed to detect missing frames');
       AddLine('during video capture, and also detect audio sync drift.');

@@ -94,7 +94,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mVert].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test will monitor the m6845 status register');
     AddLine('to determine the vertical refresh rate.  Use this');
@@ -291,7 +291,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mHoriz].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test will monitor the m6845 status register');
     AddLine('for the horizontal retrace activity bit and uses');
@@ -429,7 +429,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mTCustom90].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test reprograms the m6845 horizontal and vertical');
     AddLine('registers to expand the typical 80x25 text mode to 90x30.');
@@ -500,7 +500,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mTCustom80].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test reprograms the maximum scanline and');
     AddLine('vertical total registers to increase the number');
@@ -561,7 +561,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mInterlace].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test will enable interlaced video generation');
     AddLine('to turn 80x25 text mode into 80x50.  However, the');
@@ -624,7 +624,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mPos].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test alters the horizontal and vertical sync');
     AddLine('position registers.  These registers are used by');
@@ -676,7 +676,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mAddr].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test alters the Start Address register');
     AddLine('to change the starting memory location used');

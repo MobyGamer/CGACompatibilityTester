@@ -22,7 +22,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mTSnow].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test writes to CGA adapter RAM in a way that');
     AddLine('directly exposes CGA "snow", which is an artifact');
@@ -90,7 +90,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mTHCB].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test disables the "blink" bit to enable');
     AddLine('the use of all 16 background colors in textmode.');
@@ -136,7 +136,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mTCur].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test changes the shape of the');
     AddLine('text cursor by directly manipulating');
@@ -174,7 +174,7 @@ begin
   if interactive then begin
     with InfoPrompt do begin
       init(2,strpas(menuLookup[m40col].title));
-      WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+      WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('This test switches into 40-column textmode.');
       AddLine('The most common use of this test is to see');
@@ -256,7 +256,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mFont].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test displays a single character and then');
     AddLine('enlarges it 8x so you can compare if your adapter');

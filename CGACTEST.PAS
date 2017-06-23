@@ -40,7 +40,7 @@ Procedure TestBorder;
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mBCol].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test alters the M6845 Color Select Register');
     AddLine('while in text mode to change the border color.');
@@ -72,7 +72,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mMCol].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test alters the M6845 Color Select Register while');
     AddLine('in medium-res graphics mode to change the background color.');
@@ -110,7 +110,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mHCol].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test alters the M6845 Color Select Register while');
     AddLine('in high-res graphics mode to change the foreground color.');
@@ -150,7 +150,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mPal].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test displays all six CGA foreground palettes');
     AddLine('available in medium-res graphics mode.');

@@ -67,13 +67,12 @@ begin
     {for loop:=0 to 5 do AddLine(strpas(AboutText[loop]));}
     AddLine('');
     AddLine(' The CGA Compatibility Tester');
-    AddLine(' Version 1.24, 20160530');
+    AddLine(' Version 1.25, 20170622');
     {AddLine(' by Jim Leonard');}
     AddLine(' trixter@oldskool.org');
     AddLine('');
 
     s:=' Free heap: '+inttostr(memavail div 1024)+' KB '; AddLine(s);
-    {s:=' Framecounter: '+inttostr(framecounter); AddLine(s);}
     s:=''; AddLine(s);
     show;
     done;
@@ -293,7 +292,7 @@ begin
         mBCal:CalibBrightness;
         mCCal:CalibContrast;
         mMoire:CalibMoire;
-        {mColor:CalibColor;}
+        mColor:CalibColor;
         mVert:VertDetect;
         mHoriz:HorizDetect;
         mTCustom80:ShowText80x100;

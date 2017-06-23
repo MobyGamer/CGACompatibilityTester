@@ -8,11 +8,12 @@ uses
   totmsg,totIO1,cgalib;
 
 type
+  {Order is important here, do not rearrange unless you know what you're doing}
   userActions=(
   mBMR,mBMW,mOARB,mOAWB,
   mBCol,mMCol,mHCol,mPal,
   m40col,mTHCB,mTCur,mTSnow,mFont,
-  mBCal,mCCal,mMoire,{mColor,}mUniform,mLinearRGB,mLinearComp,
+  mBCal,mCCal,mColor,mMoire,mUniform,mLinearRGB,mLinearComp,
   mVert,mHoriz,mTCustom80,mTCustom90,mInterlace,mPos,mAddr,
   mCompWhich,mCompLo,mCompHi,mAspectNTSC,
   mCapBarsRGB,mCapBarsComp,mCapMotion,mCapRGBI,mSync,
@@ -76,12 +77,12 @@ const
 
     (id:40; {mBCal} title:'Brightness';
     blurb:'Calibrate your monitor''s Brightness control'),
-    (id:41; {mCCal} title:'Contrast and color';
+    (id:41; {mCCal} title:'Contrast';
     blurb:'Calibrate your monitor''s Contrast and color controls'),
-    (id:42; {mMoire} title:'Moire (interference)';
+    (id:42; {mColor} title:'Color';
+    blurb:'Calibrate all monitor controls'),
+    (id:43; {mMoire} title:'Moire (interference)';
     blurb:'Calibrate horizontal/vertical size and aperture'),
-    (*(id:43; {mColor} title:'Color';
-    blurb:'Calibrate color/saturation controls'),*)
     (*(id:44; {mAspectNTSC} title:'Aspect Ratio';
     blurb:'Calibrate horizontal/vertical size adjustment'),*)
     (id:45; {mUniform} title:'Uniformity and Convergence';

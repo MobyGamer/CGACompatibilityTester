@@ -28,7 +28,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mCompWhich].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('Two basic models of CGA cards were issued by IBM that differ');
     AddLine('in their composite color output.  The "older-style" card has');
@@ -137,7 +137,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mCompLo].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('What follows is a simple color test plate');
     AddLine('in 40-column color text mode.  Text mode');
@@ -226,7 +226,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mCompHi].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('What follows is a simple color test plate using the most');
     AddLine('common low-res composite color graphics mode used by');

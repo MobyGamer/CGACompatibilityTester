@@ -7,7 +7,7 @@ interface
 Procedure CalibBrightness;
 Procedure CalibContrast;
 Procedure CalibMoire;
-{Procedure CalibColor;}
+Procedure CalibColor;
 Procedure CalibAspectNTSC;
 Procedure CalibUniform;
 Procedure CalibLinearRGB;
@@ -25,7 +25,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mBCal].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test pattern assists in calibrating');
     AddLine('the brightness control on your monitor.');
@@ -55,27 +55,32 @@ begin
   PostTest;
 end;
 
+Procedure BrownNote;
+begin
+  with InfoPrompt do begin
+    AddLine('A working IBM RGBI monitor shows color index #6 as brown, not dark yellow.');
+    AddLine('(Color #6 was intentionally darkened by IBM using monitor electronics.)');
+    AddLine('This pattern clearly labels brown so you know what to expect.');
+  end;
+end;
+
 Procedure CalibContrast;
 var
   foo:byte;
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mCCal].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test pattern assists in calibrating your monitor''s contrast control.');
     AddLine('');
-    AddLine('As this pattern displays all available colors, with each color labeled,');
-    AddLine('use this pattern to adjust any color, saturation, or hue controls if');
+    AddLine('Use this pattern to adjust any color, saturation, or hue controls if');
     AddLine('present on your RGB output device.  The goal is to get each color as');
     AddLine('rich as possible without overdriving the monitor (ie. making the colors');
-    AddLine('''fuzzy'' or blurred).  As for hue adjustment, a good approximation');
-    AddLine('is that "yellow" (the color next to white) should be the color of a');
-    AddLine('lemon, and not reddish or greenish in tint.');
+    AddLine('''fuzzy'' or blurred).');
+    AddLine('All text should be clear and distinct against the background.');
     AddLine('');
-    AddLine('A working IBM RGBI monitor shows color index #6 as brown, not dark yellow.');
-    AddLine('(Color #6 was intentionally darkened by IBM using monitor electronics.)');
-    AddLine('This pattern clearly labels brown so you know what to expect.');
+    BrownNote;
     AddLine('');
     AddLine('This test is not intended for composite monitors.');
     AddLine('');
@@ -112,7 +117,7 @@ Procedure CalibMoire;
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mMoire].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('What follows are three test patterns to help calibrate');
     AddLine('any horizontal, vertical, or rotational monitor controls.');
@@ -181,7 +186,7 @@ begin
   if interactive then begin
     with InfoPrompt do begin
       init(2,strpas(menuLookup[mAspectNTSC].title));
-      WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+      WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('What follows is a classic test pattern designed to help you');
       AddLine('adjust the vertical size controls on your composite monitor');
@@ -217,7 +222,6 @@ begin
   PostTest;
 end;
 
-(*
 Procedure CalibColor;
 const
   labello1='                                                                        Light   ';
@@ -229,7 +233,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mColor].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('The following test pattern displays all available colors, with each');
     AddLine('color labeled.  Use this pattern to adjust any color, saturation, or hue');
@@ -239,10 +243,7 @@ begin
     AddLine('rule of thumb is that "yellow" (the color next to white) should be the');
     AddLine('color of a lemon, and not reddish or greenish in tint.');
     AddLine('');
-    AddLine('One characteristic of a working IBM RGBI monitor is that color index #6');
-    AddLine('shows up as brown, not dark yellow. Color #6 was intentionally darkened');
-    AddLine('by IBM using monitor electronics.  This pattern clearly labels brown');
-    AddLine('so that you know what to expect.');
+    BrownNote;
     AddLine('');
     SetOption(1,cstring,67,Finished);
     SetOption(2,astring,65,Escaped);
@@ -295,7 +296,6 @@ begin
   m6845_SetMode(c_fast_char_clock+c_videosignal_enable+c_blinking_text);
   PostTest;
 end;
-*)
 
 Procedure CalibUniform;
 const
@@ -309,7 +309,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mUniform].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('The following screens allow you to inspect your RGB monitor');
     AddLine('for color uniformity and purity.  We will rotate through the');
@@ -408,7 +408,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mLinearRGB].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test helps measure monitor linearity and convergence.');
     AddLine('Two patterns will be displayed; press a key to advance them.');
@@ -473,7 +473,7 @@ var
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mLinearComp].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test helps measure monitor linearity and convergence.');
     AddLine('Two patterns will be displayed; press a key to advance them.');

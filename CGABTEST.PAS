@@ -37,7 +37,7 @@ const
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mBMR].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This benchmarks your video adapter RAM''s maximum read');
     AddLine('speed and displays the result.  Use this to compare how');
@@ -75,7 +75,7 @@ const
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mBMW].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This benchmarks your video adapter RAM''s maximum write');
     AddLine('speed and displays the result.  Use this to compare how');
@@ -113,7 +113,7 @@ const
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mOARB].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This benchmarks your video adapter RAM''s read speed');
     AddLine('with CPU no-op instructions interleaved with memory');
@@ -161,7 +161,7 @@ const
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mOAWB].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This benchmarks your video adapter RAM''s write speed');
     AddLine('with CPU no-op instructions interleaved with memory');
