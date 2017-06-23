@@ -1,5 +1,4 @@
 The CGA Compatibility Tester
-v1.24, 20160530
 by trixter@oldskool.org
 http://www.oldskool.org/pc/cgacomp
 
