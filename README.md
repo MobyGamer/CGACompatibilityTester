@@ -5,4 +5,5 @@ The CGA Compatibility Tester, as its name implies, is a program that benchmarks 
   * Similarly, verify how badly your non-CGA card (or software emulator) screws up CGA emulation
   * Benchmark adapter RAM speed, to compare with other adapters
   * Calibrate your CGA RGB monitor for maximum enjoyment
+  * Calibrate your video capture equipment for the best possible video capture
   * Satisfy your curiosity about how CGA can be tweaked
