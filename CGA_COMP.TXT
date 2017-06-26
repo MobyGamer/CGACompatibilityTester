@@ -200,6 +200,8 @@ Version History:
 1.24: Fixed counter rollover bug in audio sync test.
 1.25: Added color bars monitor calibration plate back into the program.
       Added two more bar patterns to the color plate.
+1.25a:Removed text from some color bar patterns.
+      Shrunk code size by 6K.
 
 Possible future enhancements:
 - Add full "monochrome CGA" support (both main program and calibration: 5155,

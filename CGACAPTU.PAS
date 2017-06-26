@@ -116,6 +116,17 @@ begin
   PostTest;
 end;
 
+Procedure addCaptureText;
+begin
+  with InfoPrompt do begin
+    AddLine('displayed as a traditional color bars test plate');
+    AddLine('arranged by *LUMINANCE*.  This can be used to calibrate');
+    AddLine('your video capture setup for luminance and range');
+    AddLine('using traditional scopes (like a waveform monitor,');
+    AddLine('RGB sweep, or luminance histogram).');
+  end;
+end;
+
 Procedure BarsRGB;
 var
   b,barwidth:byte;
@@ -125,11 +136,7 @@ begin
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This pattern consists of all sixteen RGB colors,');
-    AddLine('displayed as a traditional color bars test plate');
-    AddLine('arranged by luminance.  This can be used to calibrate');
-    AddLine('your video capture setup for luminance and range');
-    AddLine('using traditional scopes (like a waveform monitor,');
-    AddLine('RGB sweep, or luminance histogram).');
+    addCaptureText;
     AddLine('');
     SetOption(1,cstring,67,Finished);
     SetOption(2,astring,65,Escaped);
@@ -207,11 +214,7 @@ begin
       WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('This pattern consists of 16 solid composite colors,');
-      AddLine('displayed as a traditional color bars test plate');
-      AddLine('arranged by luminance.  This can be used to calibrate');
-      AddLine('your video capture setup for luminance and range');
-      AddLine('using traditional scopes (like a waveform monitor,');
-      AddLine('RGB sweep, or luminance histogram).');
+      addCaptureText;
       AddLine('');
       SetOption(1,cstring,67,Finished);
       SetOption(2,astring,65,Escaped);

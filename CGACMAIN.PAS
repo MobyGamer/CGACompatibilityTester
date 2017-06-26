@@ -67,7 +67,7 @@ begin
     {for loop:=0 to 5 do AddLine(strpas(AboutText[loop]));}
     AddLine('');
     AddLine(' The CGA Compatibility Tester');
-    AddLine(' Version 1.25, 20170622');
+    AddLine(' Version 1.25a, 20170626');
     {AddLine(' by Jim Leonard');}
     AddLine(' trixter@oldskool.org');
     AddLine('');

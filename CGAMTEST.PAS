@@ -229,6 +229,7 @@ const
   labelhi1='   Dark     Light     Light     Light     Light     Light                       ';
   labelhi2='   Gray      Blue     Green      Cyan      Red     Magenta    Yellow    White   ';
 
+(*
   blabels:array[0..15] of string[15]=(
   'Black',
   'Blue',
@@ -247,6 +248,7 @@ const
   'Yellow',
   'White'
   );
+*)
 var
   foo,fooattr:byte;
 begin
@@ -309,7 +311,7 @@ begin
 
   for foo:=0 to 7 do Screen.WritePlain((foo*10)+1,1,' Color #'+inttostr(foo));
   for foo:=8 to 15 do Screen.WritePlain((foo*10)+1,21,' Color #'+inttostr(foo));
-  Screen.WriteCenter(25,$0F,'Press any key to rearrange into horizontal bars.');
+  {Screen.WriteCenter(25,$0F,'Press any key to rearrange into horizontal bars.');}
   PauseUser;
 
   Screen.clear($0e,#0);
@@ -347,14 +349,14 @@ begin
     fillbox(1,24,80,24,$ff,0);
   end;
 
-  Screen.WriteCenter(25,$0F,'Press any key to rearrange into vertical bars.');
+  {Screen.WriteCenter(25,$0F,'Press any key to rearrange into vertical bars.');}
   PauseUser;
   Screen.clear($0e,#0);
 
   for foo:=0 to 15 do
     Screen.FillBox((foo*5)+1,1,(foo*5)+5,24,(foo shl 4) OR foo,0);
 
-  Screen.WriteCenter(25,$0F,'Press any key to exit.');
+  {Screen.WriteCenter(25,$0F,'Press any key to exit.');}
   PauseUser;
   m6845_SetMode(c_fast_char_clock+c_videosignal_enable+c_blinking_text);
   PostTest;
@@ -458,6 +460,20 @@ begin
   PostTest;
 end;
 
+Procedure AddLinearityText;
+begin
+  with InfoPrompt do begin
+    AddLine('This test helps measure monitor linearity and convergence.');
+    AddLine('Two patterns will be displayed; press a key to advance them.');
+    AddLine('');
+    AddLine('Linearity: A grid of rectangles will be shown.  Each complete');
+    AddLine('rectangle should be the same size as every other complete rectangle.');
+    AddLine('');
+    AddLine('Convergence: A grid of dots will be shown.  Each dot should be');
+    AddLine('as pure to "white" as possible without any color fringing.');
+  end;
+end;
+
 Procedure CalibLinearRGB;
 const
   xdiv=20;
@@ -473,14 +489,7 @@ begin
     init(2,strpas(menuLookup[mLinearRGB].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
-    AddLine('This test helps measure monitor linearity and convergence.');
-    AddLine('Two patterns will be displayed; press a key to advance them.');
-    AddLine('');
-    AddLine('Linearity: A grid of rectangles will be shown.  Each complete');
-    AddLine('rectangle should be the same size as every other complete rectangle.');
-    AddLine('');
-    AddLine('Convergence: A grid of dots will be shown.  Each dot should be');
-    AddLine('as pure to "white" as possible without any color fringing.');
+    AddLinearityText;
     AddLine('');
     {AddLine('The geometry in this test is for RGB monitors.');}
     AddLine('The video mode used in this test is intended for RGB monitors.');
@@ -538,14 +547,7 @@ begin
     init(2,strpas(menuLookup[mLinearComp].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
-    AddLine('This test helps measure monitor linearity and convergence.');
-    AddLine('Two patterns will be displayed; press a key to advance them.');
-    AddLine('');
-    AddLine('Linearity: A grid of rectangles will be shown.  Each complete');
-    AddLine('rectangle should be the same size as every other complete rectangle.');
-    AddLine('');
-    AddLine('Convergence: A grid of dots will be shown.  Each dot should be');
-    AddLine('as pure to "white" as possible without any color fringing.');
+    AddLinearityText;
     AddLine('');
     {AddLine('The geometry in this test is for composite monitors.');}
     AddLine('The video mode used in this test is intended for composite monitors.');
