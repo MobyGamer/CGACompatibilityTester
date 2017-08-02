@@ -7,6 +7,7 @@ interface
 Procedure CalibBrightness;
 Procedure CalibContrast;
 Procedure CalibMoire;
+Procedure CalibMoireColor;
 Procedure CalibColor;
 Procedure CalibAspectNTSC;
 Procedure CalibUniform;
@@ -177,6 +178,69 @@ begin
   PostTest;
 end;
 
+Procedure CalibMoireColor;
+{
+Displays high-contrast patterns using every combination of pins:
+R+G, R+B, R+I, G+B, G+I, B+I
+}
+  procedure fillpattern(backfore:byte); assembler;
+  asm
+        mov     ax,0b800h
+        mov     es,ax
+        xor     di,di
+        mov     cx,(80*25)
+        mov     al,177
+        mov     ah,backfore
+        rep     stosw
+  end;
+
+begin
+  with InfoPrompt do begin
+    init(2,strpas(menuLookup[mMoire].title));
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
+    AddLine('');
+    AddLine('What follows are six color test patterns to help calibrate');
+    AddLine('any rotational monitor controls or shadow mask adjustments.');
+    AddLine('The patterns are engineered to display very fine "moire"');
+    AddLine('interference patterns on monitors that are mis-calibrated,');
+    AddLine('or through display paths that utilize scalers or converters.');
+    AddLine('Press any key during the test to move to the next pattern.');
+    AddLine('');
+    SetOption(1,cstring,67,Finished);
+    SetOption(2,astring,65,Escaped);
+    Result:=Show;
+    Done;
+  end;
+  if Result=Escaped then exit;
+  Preptest;
+
+  {disable blink in text mode to gain all 16 colors for background}
+  m6845_SetMode(c_fast_char_clock+c_videosignal_enable);
+
+  (*
+  R+G, R+B, R+I, G+B, G+I, B+I:
+  tBlack=0                                         ; {00}
+  tBlue=                                     c_blue; {01}
+  tGreen=                          c_green         ; {02}
+  tRed=                    c_red                   ; {04}
+  *)
+
+  fillpattern($42);
+  PauseUser;
+  fillpattern($41);
+  PauseUser;
+  fillpattern($4f);
+  PauseUser;
+  fillpattern($21);
+  PauseUser;
+  fillpattern($2f);
+  PauseUser;
+  fillpattern($1f);
+  PauseUser;
+
+  PostTest;
+end;
+
 Procedure CalibAspectNTSC;
 {show test pattern with 4:3 DAR composite monitor}
 var
@@ -274,6 +338,7 @@ begin
   if Result=Escaped then exit;
   Preptest;
 
+  {disable blink in text mode to gain all 16 colors for background}
   m6845_SetMode(c_fast_char_clock+c_videosignal_enable);
   for foo:=0 to 7 do begin
     {build rotating text attribute byte}

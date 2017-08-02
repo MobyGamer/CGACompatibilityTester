@@ -13,7 +13,7 @@ type
   mBMR,mBMW,mOARB,mOAWB,
   mBCol,mMCol,mHCol,mPal,
   m40col,mTHCB,mTCur,mTSnow,mFont,
-  mBCal,mCCal,mColor,mMoire,mUniform,mLinearRGB,mLinearComp,
+  mBCal,mCCal,mColor,mMoire,mMoireColor,mUniform,mLinearRGB,mLinearComp,
   mVert,mHoriz,mTCustom80,mTCustom90,mInterlace,mPos,mAddr,
   mCompWhich,mCompLo,mCompHi,mAspectNTSC,
   mCapBarsRGB,mCapBarsComp,mCapMotion,mCapRGBI,mSync,
@@ -83,8 +83,8 @@ const
     blurb:'Calibrate all monitor controls'),
     (id:43; {mMoire} title:'Moire (interference)';
     blurb:'Calibrate horizontal/vertical size and aperture'),
-    (*(id:44; {mAspectNTSC} title:'Aspect Ratio';
-    blurb:'Calibrate horizontal/vertical size adjustment'),*)
+    (id:44; {mMoireColor} title:'Moire (color/shadowmask)';
+    blurb:'Shadow mask adjustments and scaler conversions'),
     (id:45; {mUniform} title:'Uniformity and Convergence';
     blurb:'Examine monitor for color uniformity/purity and convergence/pincushion'),
     (id:46; {mLinearRGB} title:'Linearity (RGB)';

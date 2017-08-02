@@ -67,7 +67,7 @@ begin
     {for loop:=0 to 5 do AddLine(strpas(AboutText[loop]));}
     AddLine('');
     AddLine(' The CGA Compatibility Tester');
-    AddLine(' Version 1.25a, 20170626');
+    AddLine(' Version 1.26.0, 20170801');
     {AddLine(' by Jim Leonard');}
     AddLine(' trixter@oldskool.org');
     AddLine('');
@@ -149,11 +149,12 @@ begin
       AddLine('');
       AddLine('This program benchmarks and stresses nearly every aspect of the IBM CGA');
       AddLine('(Color Graphics Adapter).  Because this program stresses your display');
-      AddLine('system, there is a remote possibility that using this program could damage');
-      AddLine('your monitor.  The author developed this program on a true IBM CGA + 5153');
-      AddLine('color display, and has taken every precaution to avoid settings that would');
-      AddLine('damage a monitor.  But, if you continue to use this program, you agree that');
-      AddLine('the author is NOT RESPONSIBLE for any damage that may occur using this use.');
+      AddLine('system, there is a remote possibility that using this program could');
+      AddLine('damage your monitor.  The author developed this program on a true IBM');
+      AddLine('CGA+5153 color display, and has taken every precaution to avoid');
+      AddLine('settings that would damage a monitor.  However, if you continue to use');
+      AddLine('this program, you agree that the author is NOT RESPONSIBLE for any');
+      AddLine('accidental damage that may occur.');
       AddLine('');
       AddLine('Do you agree to these terms?');
       AddLine('');
@@ -292,6 +293,7 @@ begin
         mBCal:CalibBrightness;
         mCCal:CalibContrast;
         mMoire:CalibMoire;
+        mMoireColor:CalibMoireColor;
         mColor:CalibColor;
         mVert:VertDetect;
         mHoriz:HorizDetect;

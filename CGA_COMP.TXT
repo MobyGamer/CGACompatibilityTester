@@ -158,53 +158,56 @@ Greets go to:
 
 Version History:
 
-0.1:  Testing release, has half the functions added
-0.2:  Added rest of testing functions
-0.3:  Added system and graphics detection library
-0.4:  Added 8087 emulator (detection routines require $N+); also created
-      a video of the program in action on real hardware for reference.
-      Visit the website for a link to the video.
-0.5:  Fixed 8088 detection logic (hopefully didn't break NEC logic!)
-      Fixed and removed 8087-specific code; removed 8087 emulator
-0.5a: Fixed PC detection logic
-      Added Tandy 1000 detection logic
-0.5b: Fixed an embarrasing calculation bug; all block memory timings and
-      vertical refresh timings are now accurate.  Whoops!
-      Removed detection routines; Use TOPBENCH for all your detection needs.
-1.1:  Composite modes and monitors now officially supported.
-      Vertical refresh test was broken; now fixed.  Sorry for any confusion!
-      Disabled mouse support.  (It affected m6845 tweaks, and wasn`t needed.)
-      Added aspect ratio calibration pattern.
-      Added color uniformity/purity screens.
-      Added monitor linearity grids.
-      Replaced Robert Tyler picture with an amazing original piece from VileR.
-      Added Composite CGA identification screen originally seen in "8088 MPH".
-      Optimized code for size and overlay usage.
-      Now runs on 128KB systems w/ DOS 3.x (I tested 3.1).
-1.11: Added convergence pattern.
-      Changed Uniformity test to cycle through RGBI pins.
-      Pressing "P" will now pause/unpause any color cycling.
-      Re-tooled aspect ratio pattern for composite monitors only.
-      Clarified descriptions for tests meant for a particular monitor.
-1.2:  Added video capture color and luminance test plates.
-      Added vertical/horizontal motion video capture torture test.
-      Added capture dropped frame and audio/video sync test.
-      Added IRGB pin and color text labels to the uniformity test.
-      Completely rewrote vertical refresh rate detection because I'm an idiot.
-      Added command-line options for batch usage; see documentation above.
-1.21: Added tone+flash when shift is pressed in sync test for manual syncing.
-      Fixed a stack overflow bug.
-1.22: Disabled hsync+vsync on uniformity test to enable diagnostic measurement.
-      Arranged composite luma bars in test plate to reflect logical ideal.
-1.23: Added horizontal and vertical lines to 40-col test for checking jitter.
-1.24: Fixed counter rollover bug in audio sync test.
-1.25: Added color bars monitor calibration plate back into the program.
-      Added two more bar patterns to the color plate.
-1.25a:Removed text from some color bar patterns.
-      Shrunk code size by 6K.
+0.1:    Testing release, has half the functions added
+0.2:    Added rest of testing functions
+0.3:    Added system and graphics detection library
+0.4:    Added 8087 emulator (detection routines require $N+); also created
+        a video of the program in action on real hardware for reference.
+        Visit the website for a link to the video.
+0.5:    Fixed 8088 detection logic (hopefully didn't break NEC logic!)
+        Fixed and removed 8087-specific code; removed 8087 emulator
+0.5a:   Fixed PC detection logic
+        Added Tandy 1000 detection logic
+0.5b:   Fixed an embarrasing calculation bug; all block memory timings and
+        vertical refresh timings are now accurate.  Whoops!
+        Removed detection routines; Use TOPBENCH for all your detection needs.
+1.1:    Composite modes and monitors now officially supported.
+        Vertical refresh test was broken; now fixed.  Sorry for any confusion!
+        Disabled mouse support.  (It affected m6845 tweaks, and wasn`t needed.)
+        Added aspect ratio calibration pattern.
+        Added color uniformity/purity screens.
+        Added monitor linearity grids.
+        Replaced Robert Tyler picture with an amazing original piece from VileR.
+        Added Composite CGA identification screen originally seen in "8088 MPH".
+        Optimized code for size and overlay usage.
+        Now runs on 128KB systems w/ DOS 3.x (I tested 3.1).
+1.11:   Added convergence pattern.
+        Changed Uniformity test to cycle through RGBI pins.
+        Pressing "P" will now pause/unpause any color cycling.
+        Re-tooled aspect ratio pattern for composite monitors only.
+        Clarified descriptions for tests meant for a particular monitor.
+1.2:    Added video capture color and luminance test plates.
+        Added vertical/horizontal motion video capture torture test.
+        Added capture dropped frame and audio/video sync test.
+        Added IRGB pin and color text labels to the uniformity test.
+        Completely rewrote vertical refresh rate detection because I'm an idiot.
+        Added command-line options for batch usage; see documentation above.
+1.21:   Added tone+flash when shift is pressed in sync test for manual syncing.
+        Fixed a stack overflow bug.
+1.22:   Disabled hsync+vsync on uniformity test to enable diagnostic measurement.
+        Arranged composite luma bars in test plate to reflect logical ideal.
+1.23:   Added horizontal and vertical lines to 40-col test for checking jitter.
+1.24:   Fixed counter rollover bug in audio sync test.
+1.25:   Added color bars monitor calibration plate back into the program.
+        Added two more bar patterns to the color plate.
+1.25a:  Removed text from some color bar patterns.
+        Shrunk code size by 6K.
+1.26.0: Added color textmode moire patterns to bring out the worse in
+        scalers and capture devices.
 
 Possible future enhancements:
 - Add full "monochrome CGA" support (both main program and calibration: 5155,
   AT&T 6300, Compaq Portable III, others?)
+- Test on PCjr and ensure all tests work on PCjr
 - Add full support for "mode bw80" (related to the previous to-do item)
 - Add light pen support, if someone would make or give me a light pen!
