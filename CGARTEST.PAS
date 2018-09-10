@@ -22,64 +22,10 @@ uses
 var
   Screen90:ScreenOBJ;
 
-(*Procedure VertDetect;
-const
-  refcount=60*2;
-var
-  rhz:real;
-  rst:string;
-  w:word;
-begin
-  with InfoPrompt do begin
-    init(2,strpas(menuLookup[mVert].title));
-    WinForm^.Win^.SetColors(descBorder,descBody,descTitle,descIcons);
-    AddLine('');
-    AddLine('This test will monitor the m6845 status register');
-    AddLine('to determine the vertical refresh rate.  Use this');
-    AddLine('test to determine if your adapter is correctly');
-    AddLine('reproducing the refresh rate of stock CGA.');
-    AddLine('');
-    AddLine('NOTE: This test blanks your monitor for a few seconds.');
-    AddLine('');
-    SetOption(1,cstring,67,Finished);
-    SetOption(2,astring,65,Escaped);
-    Result:=Show;
-    Done;
-  end;
-  if Result=Escaped then exit;
-  PrepTest;
-  {we will measure the amount of time it takes to go from one retrace start
-  to another and use that to determine the vertical refresh rate}
-  m6845_WaitVertRetrace;
-  _LZTimerOn;
-  for w:=0 to refcount-1 do m6845_WaitVertRetrace;
-  _LZTimerOff;
-  Screen.Writeln('The average measured display and refresh cycle took  '+inttostr(_LZTimerCount div refcount)+' æsecs.');
-  {if machine is WACKO fast then we need to handle things differently}
-  if _LZTimerCount=-1 then begin
-    PrintInvalidMsg;
-    repeat until keypressed;
-    PostTest;
-    exit;
-  end;
-  rhz:=1000000 / (_LZTimerCount / refcount);
-  str(rhz:2:2,rst);
-  {Screen.Writeln('This corresponds to a vertical refresh rate of about '+rst+' Hz.');}
-  Screen.Writeln('An IBM CGA refreshes at exactly 59.92 Hz,');
-  Screen.Writeln('which is an interval of roughly 16689 æsecs.');
-  Screen.Write('Your card+monitor''s display/refresh rate is ');
-  if (rhz<59.92) or (rhz>59.94)
-    then Screen.Writeln('significantly different than CGA.')
-    else Screen.Writeln('compliant with CGA.');
-  Screen.Writeln('Press any key to continue.');
-  repeat until keypressed;
-  PostTest;
-end;*)
-
 Procedure VertDetect;
 const
-  dampening=128;
-  TargetCycles:word=19912;
+  dampening=171; {least common multiple of 18 cycles (DRAM) and 76 (# of cycles per CGA horizontal line), divided by 4}
+  TargetCycles:word=CGAFrameCycles;
 var
   rhz,avghz,minhz,maxhz:real;
   rst:string;
@@ -92,6 +38,8 @@ var
   s:string;
 
 begin
+  {!Should this start with 59.92 as default?
+  Any way to get more accurate on first try?}
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mVert].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
@@ -112,11 +60,11 @@ begin
   tfastinit(80,25);
   tfpreventsnow:=true;
   sp:=ptr($b800,0);
-  rhz:=14318180/12/262/76;
+  rhz:=PITFreq/262/76;
   str(rhz:2:4,rst);
   s:='CGA''s true vertical refresh: '+rst+' Hz';
   tfastwritexy(@s,sp,0,4,$0F);
-  s:='Note: These values may never completely settle due to interrupt jitter.';
+  s:='Note: These values may never settle due to interrupt jitter and DRAM refresh.';
   tfastwritexy(@s,sp,0,6,$07);
   s:='Press any key to exit the measurement.';
   tfastwritexy(@s,sp,0,8,$07);
@@ -166,11 +114,9 @@ begin
         in      al,40h         {Get LSB of timer counter}
         xchg    al,ah          {Save it in ah}
         in      al,40h         {Get MSB of timer counter}
-        {sti}                    {Give the PC some breathing room}
         xchg    al,ah          {Put things in the right order; AX:=starting timer}
         xchg    di,ax          {store in di for later}
 
-        {cli}                    {No rest for you, back to critical part}
 @WDR2: {wait during retrace, because we don't know where we are in the cycle}
         in      al,dx
         test    al,bl {if our bit is 1, then we're already in retrace, which means we missed it}
@@ -196,26 +142,26 @@ begin
     samples[counter]:=w;
     inc(counter); counter:=counter and (dampening-1);
     {what is our immediately-measured refresh rate?  Average rate?}
-    rhz:=(14318180/12)/w;
+    rhz:=PITFreq/w;
     {what's our average cycle count?}
     l:=0;
     for b:=0 to dampening-1 do l:=l+samples[b];
     l:=l div dampening;
-    avghz:=(14318180/12)/l;
+    avghz:=PITFreq/l;
 
     {what's our minimum hz?}
     l:=w;
     for b:=0 to dampening-1 do
       if l<samples[b]
         then l:=samples[b];
-    minhz:=(14318180/12)/l;
+    minhz:=PITFreq/l;
 
     {what's our maximum hz?}
     l:=w;
     for b:=0 to dampening-1 do
       if l>samples[b]
         then l:=samples[b];
-    maxhz:=(14318180/12)/l;
+    maxhz:=PITFreq/l;
 
     str(  rhz:2:4,rst); tfastwritexy(@rst,sp,29,0,$07);
     str(minhz:2:4,rst); tfastwritexy(@rst,sp,29,1,$07);

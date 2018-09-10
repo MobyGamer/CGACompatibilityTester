@@ -58,9 +58,8 @@ MC6845 CRTC programming:
 
 Running the Program:
 
-The CGA Compatibility Tester requires a CGA card, 128KB RAM, and DOS 3.1 or
-higher.  256KB or more total RAM is highly recommended for maximum speed.
-Every test is menu-driven, and follows this convention:
+The CGA Compatibility Tester requires a CGA card, 256KB RAM, and DOS 3.1 or
+higher.  Every test is menu-driven, and follows this convention:
 
 - Use arrow keys and ENTER to select a menu entry
 - A description of the test will pop up
