@@ -295,6 +295,7 @@ begin
         mMoire:CalibMoire;
         mMoireColor:CalibMoireColor;
         mColor:CalibColor;
+        mMono:CalibMonochrome;
         mVert:VertDetect;
         mHoriz:HorizDetect;
         mTCustom80:ShowText80x100;

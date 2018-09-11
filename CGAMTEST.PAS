@@ -9,6 +9,7 @@ Procedure CalibContrast;
 Procedure CalibMoire;
 Procedure CalibMoireColor;
 Procedure CalibColor;
+Procedure CalibMonochrome;
 Procedure CalibAspectNTSC;
 Procedure CalibUniform;
 Procedure CalibLinearRGB;
@@ -18,7 +19,7 @@ implementation
 
 uses
   strings,m6845ctl,ztimer,support,cgaccommon,cgalib,TInterrupts,tfastwrite,
-  totmsg,totinput,totIO1,totfast;
+  totmsg,totmenu,totinput,totIO1,totfast,totkey;
 
 Procedure CalibBrightness;
 var
@@ -420,6 +421,113 @@ begin
 
   for foo:=0 to 15 do
     Screen.FillBox((foo*5)+1,1,(foo*5)+5,24,(foo shl 4) OR foo,0);
+
+  {Screen.WriteCenter(25,$0F,'Press any key to exit.');}
+  PauseUser;
+  m6845_SetMode(c_fast_char_clock+c_videosignal_enable+c_blinking_text);
+  PostTest;
+end;
+
+Procedure CalibMonochrome;
+const
+  grayrampM24:array[0..15] of byte=(
+    $00,$11,$44,$55,$22,$33,$66,$77,$88,$99,$cc,$dd,$aa,$bb,$ee,$ff
+  );
+  grayrampUnknown1:array[0..15] of byte=(
+    $00,$88,$11,$99,$22,$aa,$33,$bb,$44,$cc,$55,$dd,$66,$ee,$77,$ff
+  );
+  grayrampUnknown2:array[0..15] of byte=(
+    $00,$11,$22,$33,$44,$55,$66,$77,$88,$99,$aa,$bb,$cc,$dd,$ee,$ff
+  );
+
+var
+  foo,fooattr:byte;
+  grayramp:array[0..15] of byte;
+  monitorMenu:MenuOBJ;
+  choice:byte;
+
+begin
+  with InfoPrompt do begin
+    init(2,strpas(menuLookup[mColor].title));
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
+    AddLine('');
+    AddLine('The following test pattern displays all available CGA colors arranged');
+    AddLine('as a luminance ramp meant to calibrate monochrome monitors connected to');
+    AddLine('CGA-compatible display adapters.  These adapters emulate CGA by');
+    AddLine('converting all 16 RGBI colors into 8 or 16 shades of gray for output');
+    AddLine('on either a standard or specialized monochrome monitor.');
+    AddLine('');
+    SetOption(1,cstring,67,Finished);
+    SetOption(2,astring,65,Escaped);
+    Result:=Show;
+    Done;
+  end;
+  if Result=Escaped then exit;
+
+  {show menu with nothing behind it}
+  Preptest;
+  with monitorMenu do begin
+    Init;
+
+    SetStyleTitle(2,'Select monitor/adapter');
+    {
+    Switch to a monochrome-friendly scheme.  If being true to MDA standards
+    (and there's no reason we must, this is just to give us the best chances
+    for a readable display), then we want to use these:
+    01 = low underlined
+    07 = low
+    09 = high underlined
+    0f = high
+    70 = black on green
+    78 = dark green on green
+    f0 = black on light green
+    f8 = dark green on light green
+
+    SetColors documentation:
+    This method changes the display colors of the individual menu items.
+    The procedure is passed five byte parameters: the first two parameters
+    control the display color of the menu highlight bar -- the first param-
+    eter is the attribute of any highlighted text, e.g. the 'Q' in
+    '~Q~uit', and the second parameter is the standard display color, e.g.
+    the 'uit' part. The third and fourth parameters are the display attrib-
+    utes for the un-selected (or normal) menu items, and the fifth parame-
+    ter is the display attribute of inactive items. Note that this method
+    automatically sets the window body display color to the parameter
+    LoNorm.
+    }
+    SetColors($78,$70,$09,$0f,$07);
+
+    {AddItem('');}
+    {k1, k2, k3, etc. are TOTKEY aliases for the hotkey to use,
+    and the numerical 1,2,3 are to force a specific return code.
+    Otherwise the AddItem above shifts everything down.}
+    AddFullItem(' ~1~   Olivetti M24/AT&T 6300    ',1,k1,'Olivetti M24, AT&T PC 6300, Xerox 6060, Logabax 1600',nil);
+    AddFullItem(' ~2~   Generic (linear by base)  ',2,k2,'Linear ramp by base color index',nil);
+    AddFullItem(' ~3~   Generic (linear by value) ',3,k3,'Linear ramp by ascending color value',nil);
+    SetMessageXY(1,25);
+    choice:=activate;
+    Done;
+  end;
+  if choice=0 then exit;
+  case choice of
+    1:move(grayrampM24,grayramp,sizeof(grayramp));
+    2:move(grayrampUnknown1,grayramp,sizeof(grayramp));
+    3:move(grayrampUnknown2,grayramp,sizeof(grayramp));
+  end;
+
+
+  {disable blink in text mode to gain all 16 colors for background}
+  m6845_SetMode(c_fast_char_clock+c_videosignal_enable);
+
+  {color attribute 0 is a special case to the TTOT libary, unfortunately,
+  so we need to work around it by using a non-zero attribute}
+  Screen.clear($01,#0);
+
+  {we use $DD (half-vert-bar) here because it extends past the 8x16 char
+  matrix on Olivetti systems; not doing this would show an "underline" bar.
+  Also, attribute 0 is a special case (see above) so just don't draw it.}
+  for foo:=1 to 15 do
+    Screen.FillBox((foo*5)+1,1,(foo*5)+5,24,grayramp[foo],$dd);
 
   {Screen.WriteCenter(25,$0F,'Press any key to exit.');}
   PauseUser;

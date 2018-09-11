@@ -13,7 +13,7 @@ type
   mBMR,mBMW,mOARB,mOAWB,
   mBCol,mMCol,mHCol,mPal,
   m40col,mTHCB,mTCur,mTSnow,mFont,
-  mBCal,mCCal,mColor,mMoire,mMoireColor,mUniform,mLinearRGB,mLinearComp,
+  mBCal,mCCal,mColor,mMono,mMoire,mMoireColor,mUniform,mLinearRGB,mLinearComp,
   mVert,mHoriz,mTCustom80,mTCustom90,mInterlace,mPos,mAddr,
   mCompWhich,mCompLo,mCompHi,mAspectNTSC,
   mCapBarsRGB,mCapBarsComp,mCapMotion,mCapRGBI,mSync,
@@ -81,15 +81,17 @@ const
     blurb:'Calibrate your monitor''s Contrast and color controls'),
     (id:42; {mColor} title:'Color';
     blurb:'Calibrate all monitor controls'),
-    (id:43; {mMoire} title:'Moire (interference)';
+    (id:43; {mMono} title:'Monochrome';
+    blurb:'Calibrate all monitor controls for "monochrome" CGA monitors'),
+    (id:44; {mMoire} title:'Moire (interference)';
     blurb:'Calibrate horizontal/vertical size and aperture'),
-    (id:44; {mMoireColor} title:'Moire (color/shadowmask)';
+    (id:45; {mMoireColor} title:'Moire (color/shadowmask)';
     blurb:'Shadow mask adjustments and scaler conversions'),
-    (id:45; {mUniform} title:'Uniformity and Convergence';
+    (id:46; {mUniform} title:'Uniformity and Convergence';
     blurb:'Examine monitor for color uniformity/purity and convergence/pincushion'),
-    (id:46; {mLinearRGB} title:'Linearity (RGB)';
+    (id:47; {mLinearRGB} title:'Linearity (RGB)';
     blurb:'Examine RGB monitor for display linearity'),
-    (id:47; {mLinearComp} title:'Linearity (Composite)';
+    (id:48; {mLinearComp} title:'Linearity (Composite)';
     blurb:'Examine Composite monitor for display linearity'),
 
     (id:50; {mVert} title:'Vertical retrace';
