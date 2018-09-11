@@ -140,7 +140,10 @@ begin
 
     {store cycles elapsed}
     samples[counter]:=w;
-    inc(counter); counter:=counter and (dampening-1);
+    inc(counter);
+    {clamp to non-power-of-2 dampening bound}
+    if counter>=dampening
+      then counter:=0;
     {what is our immediately-measured refresh rate?  Average rate?}
     rhz:=PITFreq/w;
     {what's our average cycle count?}
