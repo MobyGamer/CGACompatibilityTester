@@ -431,7 +431,11 @@ end;
 Procedure CalibMonochrome;
 const
   grayrampM24:array[0..15] of byte=(
-    $00,$11,$44,$55,$22,$33,$66,$77,$88,$99,$cc,$dd,$aa,$bb,$ee,$ff
+     {customer diags show this:
+     $00,$11,$44,$55,$22,$33,$66,$77, $88,$99,$cc,$dd,$aa,$bb,$ee,$ff
+     ...but that isn't a linear ramp.  It is in top and bottom halves}
+     { $00,$11,$44,$55,$22,$33,$88,$99,$66,$cc,$77,$dd,$aa,$bb,$ee,$ff}
+     $00,$11,$44,$55,$22,$33,$66,$77, $88,$99,$cc,$dd,$aa,$bb,$ee,$ff
   );
   grayrampUnknown1:array[0..15] of byte=(
     $00,$88,$11,$99,$22,$aa,$33,$bb,$44,$cc,$55,$dd,$66,$ee,$77,$ff
@@ -448,15 +452,26 @@ var
 
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mColor].title));
+    init(2,strpas(menuLookup[mMono].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('The following test pattern displays all available CGA colors arranged');
-    AddLine('as a luminance ramp meant to calibrate monochrome monitors connected to');
-    AddLine('CGA-compatible display adapters.  These adapters emulate CGA by');
+    AddLine('in two luminance ramps meant to calibrate monochrome monitors connected');
+    AddLine('to CGA-compatible display adapters.  (These adapters emulate CGA by');
     AddLine('converting all 16 RGBI colors into 8 or 16 shades of gray for output');
-    AddLine('on either a standard or specialized monochrome monitor.');
+    AddLine('on either a standard or specialized monochrome monitor.)');
     AddLine('');
+    AddLine('On this test plate, the brightness control affects all 16 boxes,');
+    AddLine('but the contrast contol should affect only the lower 8 boxes.');
+    AddLine('');
+    AddLine('To calibrate your monochrome CGA monitor:');
+    AddLine('1. Turn brightness and contrast knobs all the way down.');
+    AddLine('2. Turn brightness UP until comfortable.');
+    AddLine('3. Turn contrast UP until a good mixture of differing shades is reached.');
+    AddLine('4. BACK OFF either adjustment if text starts to get fuzzy or distorted.');
+    AddLine('');
+    AddLine('If the contrast knob affects more than just the lower 8 boxes,');
+    AddLine('try picking one of the other monitor types.');
     SetOption(1,cstring,67,Finished);
     SetOption(2,astring,65,Escaped);
     Result:=Show;
@@ -520,16 +535,15 @@ begin
   m6845_SetMode(c_fast_char_clock+c_videosignal_enable);
 
   {color attribute 0 is a special case to the TTOT libary, unfortunately,
-  so we need to work around it by using a non-zero attribute}
-  Screen.clear($01,#0);
+  so we need to work around it by using a non-zero attribute.  Can't use
+  $01 because M24 underlines everything with a blue or lightblue foreground.}
+  Screen.clear($07,#0);
+  for foo:=1 to 7 do
+    Screen.FillBox((foo*10)+1,1,(foo*10)+10,12,grayramp[foo] AND $F0,0);
+  for foo:=8 to 15 do
+    Screen.FillBox((foo*10)+1,12,(foo*10)+10,23,grayramp[foo] AND $F0,0);
 
-  {we use $DD (half-vert-bar) here because it extends past the 8x16 char
-  matrix on Olivetti systems; not doing this would show an "underline" bar.
-  Also, attribute 0 is a special case (see above) so just don't draw it.}
-  for foo:=1 to 15 do
-    Screen.FillBox((foo*5)+1,1,(foo*5)+5,24,grayramp[foo],$dd);
-
-  {Screen.WriteCenter(25,$0F,'Press any key to exit.');}
+  Screen.WriteCenter(25,$0F,'°±² ºð Use this line to ensure text remains sharp throughout adjustment ðº ²±°');
   PauseUser;
   m6845_SetMode(c_fast_char_clock+c_videosignal_enable+c_blinking_text);
   PostTest;
