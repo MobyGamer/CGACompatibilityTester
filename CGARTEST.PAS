@@ -24,15 +24,21 @@ var
 
 Procedure VertDetect;
 const
-  dampening=171; {least common multiple of 18 cycles (DRAM) and 76 (# of cycles per CGA horizontal line), divided by 4}
+  dampening=19*3*2; {Distinct prime factors of the least common
+                    multiple of 18 cycles (DRAM)
+                    and 76 (# of cycles per CGA horizontal line).
+  If you can think of a better value, submit a pull request :-) }
+
   TargetCycles:word=CGAFrameCycles;
+
 var
   rhz,avghz,minhz,maxhz:real;
   rst:string;
-  w:word;
+  w,dcounter:word;
   l:longint;
   b:byte;
-  counter:byte;
+  counter:word;
+  percount:boolean;
   samples:array[0..dampening-1] of word;
   sp:pointer;
   s:string;
@@ -66,8 +72,10 @@ begin
   tfastwritexy(@s,sp,0,4,$0F);
   s:='Note: These values may never settle due to interrupt jitter and DRAM refresh.';
   tfastwritexy(@s,sp,0,6,$07);
+  s:='Measurements not guaranteed 100% accurate; consult your hardware documentation.';
+  tfastwritexy(@s,sp,0,7,$07);
   s:='Press any key to exit the measurement.';
-  tfastwritexy(@s,sp,0,8,$07);
+  tfastwritexy(@s,sp,0,9,$07);
 
   s:='Refresh rate detected (now):         Hz';
   tfastwritexy(@s,sp,0,0,$07);
@@ -85,9 +93,14 @@ begin
   mode 3; everything 486 and later inits mode 2.  Go figure.  This should
   not damage anything in DOS or TSRs, in case you were wondering.}
   InitChannel(0,3,2,$0000);
+
+  {init vars to defaults, assume CGA values as best case}
   w:=TargetCycles;
-  for b:=0 to dampening-1 do samples[b]:=w;
-  counter:=0;
+  for dcounter:=0 to dampening-1 do samples[dcounter]:=w;
+  minHz:=(PITFreq/w); maxHz:=minHz;
+  minHz:=minHz*2;
+  maxHz:=maxHz/2;
+  counter:=0; percount:=true;
 
   repeat
     {we will measure the amount of time it takes to go from one retrace start
@@ -148,28 +161,31 @@ begin
     rhz:=PITFreq/w;
     {what's our average cycle count?}
     l:=0;
-    for b:=0 to dampening-1 do l:=l+samples[b];
+    for dcounter:=0 to dampening-1 do l:=l+samples[dcounter];
     l:=l div dampening;
     avghz:=PITFreq/l;
 
     {what's our minimum hz?}
-    l:=w;
-    for b:=0 to dampening-1 do
-      if l<samples[b]
-        then l:=samples[b];
-    minhz:=PITFreq/l;
+    if PITFreq/w < minHz
+      then minHz:= PITFreq/w;
 
     {what's our maximum hz?}
-    l:=w;
-    for b:=0 to dampening-1 do
-      if l>samples[b]
-        then l:=samples[b];
-    maxhz:=PITFreq/l;
+    if PITFreq/w > maxHz
+      then maxHz:= PITFreq/w;
 
     str(  rhz:2:4,rst); tfastwritexy(@rst,sp,29,0,$07);
     str(minhz:2:4,rst); tfastwritexy(@rst,sp,29,1,$07);
     str(maxhz:2:4,rst); tfastwritexy(@rst,sp,29,2,$07);
     str(avghz:2:4,rst); tfastwritexy(@rst,sp,29,3,$0F);
+
+    {add "quality" measure of the average}
+    if counter=0 then percount:=false;
+    if percount then begin
+      avghz:=((counter+1)/dampening)*100;
+      str(avghz:2:1,rst);
+      rst:=rst+'%';
+      tfastwritexy(@rst,sp,40,3,$0F);
+    end;
 
   until keypressed;
 
