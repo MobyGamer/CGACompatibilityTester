@@ -247,7 +247,7 @@ a counter. Then it checks to see if the BIOS handler should be called.
 If so, it calls it; if not, it acknowledges the interrupt itself.
 
 Do not do any LONGINT stuff in an interrupt handler with Turbo Pascal 7
-because the 32-bit-away routines do not preserve the upper bits of
+because the 32-bit-aware routines do not preserve the upper bits of
 ax/bx/cx/dx. If you must, and your code will run on 386s or higher,
 make sure you PUSH EAX/EBX/ECX/EDX before starting and POP when done.
 }
@@ -257,13 +257,36 @@ begin
   {every so often, switch to new page}
   inc(framecounter);
 
-  framew:=word(framecounter) and 511;
+  framew:=word(framecounter) and $1ff; {512-1}
   faddr:=(framew shr 7)*(40*25);
   mem[$b800:(faddr shl 1)+2]:=(framew and 1)+ord('0');
   if (framew and 127)=0 then begin
     case framew of
       128*0,128*1,128*2,128*3:begin
         m6845_SetDisplayAddress(faddr);
+        asm
+
+        mov     dx,m6845_status
+        mov     cx,dx
+        mov     bl,c_vertical_sync
+        mov     bh,c_display_enable or c_vertical_sync
+@WDR:   {wait while we are still drawing}
+        in      al,dx
+        test    al,bl
+        jz      @WDR
+
+        {turn border yellow}
+        mov     dx,m6845_color_sel
+        mov     al,0eh
+        out     dx,al
+
+        mov     dx,cx
+@hor1:  {wait until drawing actually starts before sounding beep}
+        in      al,dx
+        test    al,bh
+        jnz     @hor1
+
+        end;
         case framew of
             0:Chan2SquarewaveOn(440); {A}
           128:Chan2SquarewaveOn(554); {C#}
@@ -351,6 +374,24 @@ var
     end;
   end;
 
+  Procedure DrawCharBigBox(bx,by:byte;ic:char;fontdata:pbyte);
+  var
+    x,y,mask:byte;
+    s:string[16];
+  begin
+    inc(word(fontdata),8*byte(ic)); {advance to char in rom font data}
+    for y:=0 to 7 do begin
+      mask:=$80; s:='';
+      for x:=0 to 15 do begin
+        if (fontdata^ AND mask)=mask then s:=s+#219 else s:=s+#0;
+        if odd(x) then mask:=mask SHR 1;
+      end;
+      tfastwritexy(@s,sp,bx,by+(y*2),  $0f);
+      tfastwritexy(@s,sp,bx,by+(y*2)+1,$0f);
+      inc(word(fontdata));
+    end;
+  end;
+
 begin
   if interactive then begin
     with InfoPrompt do begin
@@ -417,11 +458,13 @@ begin
     s:=inttostr(b+1);
     tfastwritexy(@s,sp,39,b*25,$07);
     c:=s[1];
-    DrawCharBox(20-4,(b*25)+12-4,c,pcgathick);
+    {DrawCharBox(20-4,(b*25)+12-4,c,pcgathick);}
+    {DrawCharBox((b*10)+1,(b*25)+12-4,c,pcgathick);}
+    DrawCharBigBox((b*8)+1,(b*25)+5,c,pcgathick);
 
-    s:='Number intervals NOT aligned to seconds.';
+    s:='Number intervals NOT aligned to seconds!';
     tfastwritexy(@s,sp,0,(b*25)+22,$07);
-    s:='Do not use as a hh:mm:ss time reference!';
+    s:='Do NOT use as a hh:mm:ss time reference!';
     tfastwritexy(@s,sp,0,(b*25)+23,$07);
     s:='Provided for capture sync purposes only.';
     tfastwritexy(@s,sp,0,(b*25)+24,$07);

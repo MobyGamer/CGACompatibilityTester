@@ -52,7 +52,7 @@ MC6845 CRTC programming:
   Horizontal/Vertical sync position test
   Start Address register test
 
-...and MUCH, MUCH MORE(tm)
+...and MUCH MUCH MORE(tm)
 
 =============================================================================
 
@@ -203,6 +203,8 @@ Version History:
         Shrunk code size by 6K.
 1.26.0: Added color textmode moire patterns to bring out the worse in
         scalers and capture devices.
+1.26.2: Replaced VileR's test picture with something else
+        Added a yellow border that draws when audio sounds in sync test.
 
 Possible future enhancements:
 - Add full "monochrome CGA" support (both main program and calibration: 5155,
