@@ -241,6 +241,7 @@ end;
 
 {$F+}
 procedure audioSyncHandler; Interrupt;
+{$R-,S-,Q-} {no extraneous code in the interrupt handler please}
 {
 Ok, here's our actual handler. This particular handler just increments
 a counter. Then it checks to see if the BIOS handler should be called.
@@ -263,14 +264,31 @@ begin
   if (framew and 127)=0 then begin
     case framew of
       128*0,128*1,128*2,128*3:begin
-        m6845_SetDisplayAddress(faddr);
         asm
+        {set display address}
+        mov     bx,faddr
+        mov     dx,m6845_index
+        mov     al,m6845_start_address_high
+        out     dx,al
+        {mov     dx,m6845_data}
+        inc     dx
+        mov     al,bh
+        out     dx,al
+        {mov     dx,m6845_index}
+        dec     dx
+        mov     al,m6845_start_address_low
+        out     dx,al
+        {mov     dx,m6845_data}
+        inc     dx
+        mov     al,bl
+        out     dx,al
 
+        {wait while we are still drawing}
         mov     dx,m6845_status
         mov     cx,dx
         mov     bl,c_vertical_sync
         mov     bh,c_display_enable or c_vertical_sync
-@WDR:   {wait while we are still drawing}
+@WDR:
         in      al,dx
         test    al,bl
         jz      @WDR
@@ -288,10 +306,10 @@ begin
 
         end;
         case framew of
-            0:Chan2SquarewaveOn(440); {A}
-          128:Chan2SquarewaveOn(554); {C#}
-          256:Chan2SquarewaveOn(659); {E}
-          384:Chan2SquarewaveOn(880);
+        128*0:Chan2SquarewaveOn(440); {A}
+        128*1:Chan2SquarewaveOn(554); {C#}
+        128*2:Chan2SquarewaveOn(659); {E}
+        128*3:Chan2SquarewaveOn(880);
         end;
       end;
     end;
