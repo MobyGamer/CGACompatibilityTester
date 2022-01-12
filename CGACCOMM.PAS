@@ -16,7 +16,7 @@ type
   mBCal,mCCal,mColor,mMono,mMoire,mMoireColor,mUniform,mLinearRGB,mLinearComp,
   mVert,mHoriz,mTCustom80,mTCustom90,mInterlace,mPos,mAddr,
   mCompWhich,mCompLo,mCompHi,mAspectNTSC,
-  mCapBarsRGB,mCapBarsComp,mCapMotion,mCapRGBI,mSync,
+  mCapBarsRGB,mCapBarsComp,mCapMotion,mCapRGBI,mSync,mCamera,
   mIntro,mAbout,
   {$IFDEF DETECT}
   mDetect,
@@ -132,6 +132,8 @@ const
     blurb:'RGB displayed in both intensities for calibration'),
     (id:74; {mSync} title:' Audio/Video sync drift ';
     blurb:'Displays longform timer with audio queues'),
+    (id:75; {mCamera} title:' Camera calibration ';
+    blurb:'A few screens to help calibrate camera focus and white balance'),
 
     (id:100; {mIntro} title:' Introduction ';
     blurb:'What this program does and why you would want to use it'),

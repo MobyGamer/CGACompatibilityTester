@@ -8,7 +8,7 @@ Adapter (CGA).  This can be used to:
 
 - Verify that your clone CGA card is 100% compatible with the real IBM CGA
 - Calibrate your CGA RGB or Composite monitor for maximum enjoyment
-- Calibrate your capture solution for accurate colors and motion
+- Calibrate your capture solution (or camera) for accurate colors and motion
 - Benchmark adapter RAM speed
 - Satisfy your curiosity about how CGA can be tweaked
 - Display neato 16-color transparent raster bars through the power of awesome
@@ -145,7 +145,7 @@ exercise for the reader.
 Greets go to:
   Vile Rancour
   reenigne
-  Scali
+  Bill Hart
   Hargle (for suggesting the idea of this program in the first place)
   Great Hierophant (CGA ROM dump) and John Elliott (explaining ROM layout)
   Fallo (interlacing confirmation)
@@ -205,10 +205,9 @@ Version History:
         scalers and capture devices.
 1.26.3a:Replaced VileR's test picture with something else (also cool).
         Added a yellow border that draws when audio sounds in sync test.
+1.27.0: Added camera calibration plates.
 
 Possible future enhancements:
-- Add full "monochrome CGA" support (both main program and calibration: 5155,
-  AT&T 6300, Compaq Portable III, others?)
 - Test on PCjr and ensure all tests work on PCjr
 - Add full support for "mode bw80" (related to the previous to-do item)
 - Add light pen support, if someone would make or give me a light pen!

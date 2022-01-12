@@ -9,6 +9,7 @@ Procedure BarsRGBI;
 Procedure BarsComp;
 Procedure MotionTest;
 Procedure audioSync;
+Procedure CameraCalibration;
 
 implementation
 
@@ -368,7 +369,6 @@ var
   f:file;
   fdata:pointer;
   pmda,pcgathin,pcgathick:pbyte;
-  sp:pointer;
   s,it,ss:string;
   br,cr,r:real;
   ibr,icr,l:longint;
@@ -387,7 +387,7 @@ var
         if (fontdata^ AND mask)=mask then s:=s+#219 else s:=s+#0;
         mask:=mask SHR 1;
       end;
-      tfastwritexy(@s,sp,bx,by+y,$0f);
+      tfastwritexy(@s,vidp,bx,by+y,$0f);
       inc(word(fontdata));
     end;
   end;
@@ -404,8 +404,8 @@ var
         if (fontdata^ AND mask)=mask then s:=s+#219 else s:=s+#0;
         if odd(x) then mask:=mask SHR 1;
       end;
-      tfastwritexy(@s,sp,bx,by+(y*2),  $0f);
-      tfastwritexy(@s,sp,bx,by+(y*2)+1,$0f);
+      tfastwritexy(@s,vidp,bx,by+(y*2),  $0f);
+      tfastwritexy(@s,vidp,bx,by+(y*2)+1,$0f);
       inc(word(fontdata));
     end;
   end;
@@ -462,7 +462,6 @@ begin
   pmda:=fdata; pcgathin:=pmda; pcgathick:=pmda;
   inc(word(pcgathick),6144);
   inc(word(pcgathin),4096);
-  sp:=ptr($b800,0);
 
   tfastinit(40,25*4);
   tfpreventsnow:=false;
@@ -474,20 +473,20 @@ begin
 
   for b:=0 to 3 do begin
     s:=inttostr(b+1);
-    tfastwritexy(@s,sp,39,b*25,$07);
+    tfastwritexy(@s,vidp,39,b*25,$07);
     c:=s[1];
     {DrawCharBox(20-4,(b*25)+12-4,c,pcgathick);}
     {DrawCharBox((b*10)+1,(b*25)+12-4,c,pcgathick);}
     DrawCharBigBox((b*8)+1,(b*25)+5,c,pcgathick);
 
     s:='Number intervals NOT aligned to seconds!';
-    tfastwritexy(@s,sp,0,(b*25)+22,$07);
+    tfastwritexy(@s,vidp,0,(b*25)+22,$07);
     s:='Do NOT use as a hh:mm:ss time reference!';
-    tfastwritexy(@s,sp,0,(b*25)+23,$07);
+    tfastwritexy(@s,vidp,0,(b*25)+23,$07);
     s:='Provided for capture sync purposes only.';
-    tfastwritexy(@s,sp,0,(b*25)+24,$07);
+    tfastwritexy(@s,vidp,0,(b*25)+24,$07);
     s:='( )';
-    tfastwritexy(@s,sp,0,b*25,$07);
+    tfastwritexy(@s,vidp,0,b*25,$07);
   end;
 
   {
@@ -506,13 +505,80 @@ begin
   care of switching pages, sounding a bell, flashing the border, etc.}
   repeat
     s:=inttostr(framecounter);
-    for b:=0 to 3 do tfastwritexy(@s,sp,4,b*25,$07);
+    for b:=0 to 3 do tfastwritexy(@s,vidp,4,b*25,$07);
   until keypressed or (framecounter>maxframetime);
 
   CleanUpTimer;
   freemem(fdata,8192);
   PostTest;
 end;
+
+Procedure CameraCalibration;
+
+begin
+  if interactive then begin
+    with InfoPrompt do begin
+      init(2,strpas(menuLookup[mCapBarsComp].title));
+      WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
+      AddLine('');
+      AddLine('This section shows three calibration screens: Pure black,');
+      AddLine('36% gray, and 100% white, to be used to help calibrate');
+      AddLine('cameras that are shooting pictures or video of the CRT.');
+      AddLine('There are also characters present in the center and the corners');
+      AddLine('of the screen to assist depth of focus adjustment.');
+      AddLine('');
+      AddLine('Use the black screen to set focus.');
+      AddLine('Use the 36% gray screen to calibrate for 36 IRE (optional).');
+      AddLine('Use the 100% white screen to set white balance on your camera.');
+      AddLine('Increase f-stops to sharpen and darken the image.');
+      AddLine('');
+      AddLine('Press a key to advance through screens.');
+      AddLine('');
+      SetOption(1,cstring,67,Finished);
+      SetOption(2,astring,65,Escaped);
+      Result:=Show;
+      Done;
+    end;
+    if Result=Escaped then exit;
+  end;
+  PrepTest;
+  {turn off blink to get all colors}
+  m6845_SetMode(c_fast_char_clock+c_videosignal_enable);
+  with Screen do begin
+    {set up test pattern}
+    fillbox(1,1,vwidth,vDepth,$07,1);
+    box(1,1,5,3,$07,1);
+    box(vWidth-4,1,vWidth,3,$07,1);
+    box(vWidth-4,vDepth-2,vWidth,vDepth,$07,1);
+    box(1,vDepth-2,5,vDepth,$07,1);
+    box((vwidth div 2)-2,(vDepth div 2),(vwidth div 2)+2,(vDepth div 2)+2,$07,1);
+
+    WritePlain(3,2,#250);
+    WritePlain(vWidth-2,2,#250);
+    WritePlain(vWidth-2,vDepth-1,#250);
+    WritePlain(3,vDepth-1,#250);
+    WritePlain((vwidth div 2),(vDepth div 2)+1,#250);
+
+    smartvertline(1,1,vDepth,$07,1);
+    smartvertline(vWidth,1,vDepth,$07,1);
+    smarthorizline(1,vWidth,1,$07,1);
+    smarthorizline(1,vWidth,vDepth,$07,1);
+    PauseUser;
+
+    {#8 is 36% gray}
+    attrib(1,1,vWidth,vDepth,$8f);
+    PauseUser;
+
+    {white}
+    attrib(1,1,vWidth,vDepth,$f0);
+    PauseUser;
+  end;
+  PostTest;
+  {turn on blink bit}
+  m6845_SetMode(c_fast_char_clock+c_videosignal_enable+c_blinking_text);
+end;
+
+
 
 end.
 

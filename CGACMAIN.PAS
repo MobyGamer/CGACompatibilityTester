@@ -67,7 +67,7 @@ begin
     {for loop:=0 to 5 do AddLine(strpas(AboutText[loop]));}
     AddLine('');
     AddLine(' The CGA Compatibility Tester');
-    AddLine(' Version 1.26.4, 20211109');
+    AddLine(' Version 1.27.0, 20220111');
     {AddLine(' by Jim Leonard');}
     AddLine(' trixter@oldskool.org');
     AddLine('');
@@ -241,9 +241,9 @@ begin
 
     with CapMenu do begin
       Init;
-      SetStyleTitle(6,'Video capture Tests');
+      SetStyleTitle(6,'Camera/Video capture Tests');
       SetMessageXY(1,25);
-      for actloop:=mCapBarsRGB to mSync do
+      for actloop:=mCapBarsRGB to mCamera do
         AddFullItem(strpas(menuLookup[actLoop].title),menuLookup[actLoop].id,0,strpas(menuLookup[actLoop].blurb),nil);
     end;
   end;
@@ -315,6 +315,7 @@ begin
         mCapMotion:MotionTest;
         mCapRGBI:BarsRGBI;
         mSync:audioSync;
+        mCamera:CameraCalibration;
       else
         begin
           with msg do begin
