@@ -206,6 +206,7 @@ Version History:
 1.26.3a:Replaced VileR's test picture with something else (also cool).
         Added a yellow border that draws when audio sounds in sync test.
 1.27.0: Added camera calibration plates.
+1.27.1: Refactored to save 1k of code and 13k of RAM.
 
 Possible future enhancements:
 - Test on PCjr and ensure all tests work on PCjr

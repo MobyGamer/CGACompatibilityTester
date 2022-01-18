@@ -16,7 +16,7 @@ implementation
 uses
   strings,support,m6845ctl,ztimer,cgaccommon,cgastaticdata,
   TInterrupts,{cgalib_g,}cgalib,
-  totsys,totmsg,totIO1,totfast,tfastwrite;
+  totIO1,totfast;
 
 var
   framew:word;
@@ -374,6 +374,7 @@ var
   ibr,icr,l:longint;
   b:byte;
   c:char;
+  oldw:byte;
 
   Procedure DrawCharBox(bx,by:byte;ic:char;fontdata:pbyte);
   var
@@ -387,7 +388,7 @@ var
         if (fontdata^ AND mask)=mask then s:=s+#219 else s:=s+#0;
         mask:=mask SHR 1;
       end;
-      tfastwritexy(@s,vidp,bx,by+y,$0f);
+      Screen.WriteAt(bx+1,by+y+1,$0f,s);
       inc(word(fontdata));
     end;
   end;
@@ -404,8 +405,8 @@ var
         if (fontdata^ AND mask)=mask then s:=s+#219 else s:=s+#0;
         if odd(x) then mask:=mask SHR 1;
       end;
-      tfastwritexy(@s,vidp,bx,by+(y*2),  $0f);
-      tfastwritexy(@s,vidp,bx,by+(y*2)+1,$0f);
+      Screen.WriteAt(bx+1,by+(y*2)+1,$0f,s);
+      Screen.WriteAt(bx+1,by+(y*2)+2,$0f,s);
       inc(word(fontdata));
     end;
   end;
@@ -462,31 +463,28 @@ begin
   pmda:=fdata; pcgathin:=pmda; pcgathick:=pmda;
   inc(word(pcgathick),6144);
   inc(word(pcgathin),4096);
-
-  tfastinit(40,25*4);
-  tfpreventsnow:=false;
   asm
         mov     ax,0001
         int     10h
   end;
+  oldw:=Screen.vWidth;
+  Screen.vWidth:=40;
+  Screen.oWritePtr^.vWidth:=40;
+
   m6845_SetCursorLoc(4*(40*25));
 
   for b:=0 to 3 do begin
     s:=inttostr(b+1);
-    tfastwritexy(@s,vidp,39,b*25,$07);
+    Screen.WriteAt(40,(b*25)+1,$07,s);
     c:=s[1];
     {DrawCharBox(20-4,(b*25)+12-4,c,pcgathick);}
     {DrawCharBox((b*10)+1,(b*25)+12-4,c,pcgathick);}
     DrawCharBigBox((b*8)+1,(b*25)+5,c,pcgathick);
 
-    s:='Number intervals NOT aligned to seconds!';
-    tfastwritexy(@s,vidp,0,(b*25)+22,$07);
-    s:='Do NOT use as a hh:mm:ss time reference!';
-    tfastwritexy(@s,vidp,0,(b*25)+23,$07);
-    s:='Provided for capture sync purposes only.';
-    tfastwritexy(@s,vidp,0,(b*25)+24,$07);
-    s:='( )';
-    tfastwritexy(@s,vidp,0,b*25,$07);
+    Screen.WriteAt(1,(b*25)+22+1,$07,'Number intervals NOT aligned to seconds!');
+    Screen.WriteAt(1,(b*25)+23+1,$07,'Do NOT use as a hh:mm:ss time reference!');
+    Screen.WriteAt(1,(b*25)+24+1,$07,'Provided for capture sync purposes only.');
+    Screen.WriteAt(1,(b*25)+1,$07,'( )');
   end;
 
   {
@@ -505,15 +503,20 @@ begin
   care of switching pages, sounding a bell, flashing the border, etc.}
   repeat
     s:=inttostr(framecounter);
-    for b:=0 to 3 do tfastwritexy(@s,vidp,4,b*25,$07);
+    for b:=0 to 3 do Screen.WriteAt(5,(b*25)+1,$07,s);
   until keypressed or (framecounter>maxframetime);
 
   CleanUpTimer;
   freemem(fdata,8192);
+  Screen.oWritePtr^.vWidth:=oldw;
+  Screen.vWidth:=oldw;
   PostTest;
 end;
 
 Procedure CameraCalibration;
+
+const
+  sharpline='°±² ºð This line should be sharp ðº ²±°';
 
 begin
   if interactive then begin
@@ -522,15 +525,15 @@ begin
       WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('This section shows three calibration screens: Pure black,');
-      AddLine('36% gray, and 100% white, to be used to help calibrate');
-      AddLine('cameras that are shooting pictures or video of the CRT.');
+      AddLine('36% gray, 70% gray, and 100% white, to be used to help ');
+      AddLine('calibrate cameras that are photographing the CRT.');
       AddLine('There are also characters present in the center and the corners');
       AddLine('of the screen to assist depth of focus adjustment.');
       AddLine('');
       AddLine('Use the black screen to set focus.');
-      AddLine('Use the 36% gray screen to calibrate for 36 IRE (optional).');
+      AddLine('Use the 36% and 70% grays to check IRE (optional).');
       AddLine('Use the 100% white screen to set white balance on your camera.');
-      AddLine('Increase f-stops to sharpen and darken the image.');
+      AddLine('Increase f-stops to both sharpen and darken the image.');
       AddLine('');
       AddLine('Press a key to advance through screens.');
       AddLine('');
@@ -563,10 +566,18 @@ begin
     smartvertline(vWidth,1,vDepth,$07,1);
     smarthorizline(1,vWidth,1,$07,1);
     smarthorizline(1,vWidth,vDepth,$07,1);
+
+    Screen.WriteCenter(1,$0F,sharpline);
+    Screen.WriteCenter(25,$0F,sharpline);
+
     PauseUser;
 
     {#8 is 36% gray}
     attrib(1,1,vWidth,vDepth,$8f);
+    PauseUser;
+
+    {#7 is 70% gray}
+    attrib(1,1,vWidth,vDepth,$7f);
     PauseUser;
 
     {white}

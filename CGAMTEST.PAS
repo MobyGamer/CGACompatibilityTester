@@ -18,8 +18,8 @@ Procedure CalibLinearComp;
 implementation
 
 uses
-  strings,m6845ctl,ztimer,support,cgaccommon,cgalib,TInterrupts,tfastwrite,
-  totmsg,totmenu,totinput,totIO1,totfast,totkey;
+  strings,m6845ctl,ztimer,support,cgaccommon,cgalib,TInterrupts,
+  totmenu,totIO1,totfast,totkey;
 
 Procedure CalibBrightness;
 var
@@ -51,7 +51,7 @@ begin
     WriteCenter(19,$07,'Now examine the screen:');
     WriteCenter(20,07,'If the background is now dark gray, turn it down until it is black again.');
     WriteCenter(21,$07,'If any box edges are fuzzy ("blooming"), turn it down until they are sharp.');
-    WriteCenter(25,$07,'Press any key to exit.');
+    WriteCenter(25,$07,'Hit a key to exit.');
   end;
   PauseUser;
   PostTest;
@@ -60,8 +60,8 @@ end;
 Procedure BrownNote;
 begin
   with InfoPrompt do begin
-    AddLine('A working IBM RGBI monitor shows color index #6 as brown, not dark yellow.');
-    AddLine('(Color #6 was intentionally darkened by IBM using monitor electronics.)');
+    AddLine('A working IBM RGBI monitor shows color index #6 as brown, NOT dark yellow.');
+    AddLine('(Color #6 is intentionally made brown using monitor electronics.)');
     AddLine('This pattern clearly labels brown so you know what to expect.');
   end;
 end;
@@ -79,7 +79,7 @@ begin
     AddLine('Use this pattern to adjust any color, saturation, or hue controls if');
     AddLine('present on your RGB output device.  The goal is to get each color as');
     AddLine('rich as possible without overdriving the monitor (ie. making the colors');
-    AddLine('''fuzzy'' or blurred).');
+    AddLine('"fuzzy" or blurred).');
     AddLine('All text should be clear and distinct against the background.');
     AddLine('');
     BrownNote;
@@ -103,13 +103,13 @@ begin
     TitledBox(41,9,60,17,$6e,$6e,$6e,4,'|Yellow->brown');
     TitledBox(61,9,80,17,$7f,$7f,$7f,4,'|White->gray');
 
-    WriteCenter(18,$07,'This pattern helps calibrate the contrast control on your RGB monitor.');
+    WriteCenter(18,$07,'This pattern helps calibrate your contrast controls.');
     WriteCenter(19,$07,'Each of these boxes has a title and border in a lighter color than the');
     WriteCenter(20,$07,'box itself.  Adjust your contrast control until you can clearly see the');
     WriteCenter(21,$07,'titles/borders stand out against the boxes.');
     WriteCenter(23,$0F,'If you cannot see the titles/borders, there is something wrong with the');
-    WriteCenter(24,$0F,'intensity pin of your adapter or monitor.  Consult a CGA pinout to fix.');
-    WriteCenter(25,$07,'Press any key to exit.');
+    WriteCenter(24,$0F,'intensity pin of your adapter or monitor.');
+    WriteCenter(25,$07,'Hit a key to exit.');
   end;
   PauseUser;
   PostTest;
@@ -124,8 +124,7 @@ begin
     AddLine('What follows are three test patterns to help calibrate');
     AddLine('any horizontal, vertical, or rotational monitor controls.');
     AddLine('The patterns are engineered to display "moire" interference');
-    AddLine('patterns on monitors that are not properly calibrated.');
-    AddLine('Press any key during the test to move to the next pattern.');
+    AddLine('patterns.  Hit a key during the test to move to the next pattern.');
     AddLine('');
     SetOption(1,cstring,67,Finished);
     SetOption(2,astring,65,Escaped);
@@ -203,9 +202,9 @@ begin
     AddLine('What follows are six color test patterns to help calibrate');
     AddLine('any rotational monitor controls or shadow mask adjustments.');
     AddLine('The patterns are engineered to display very fine "moire"');
-    AddLine('interference patterns on monitors that are mis-calibrated,');
-    AddLine('or through display paths that utilize scalers or converters.');
-    AddLine('Press any key during the test to move to the next pattern.');
+    AddLine('interference patterns on monitors that are mis-calibrated');
+    AddLine('or display paths using inferior scalers or converters.');
+    AddLine('Hit a key during the test to advance the patterns.');
     AddLine('');
     SetOption(1,cstring,67,Finished);
     SetOption(2,astring,65,Escaped);
@@ -259,8 +258,8 @@ begin
       AddLine('leads to geometric distortion, such as circles looking like');
       AddLine('ovals, squares looking like rectangles, etc.)');
       AddLine('');
-      AddLine('Adjust the vertical size control (and horizontal, if you have');
-      AddLine('one) until the circles appear perfectly circular.');
+      AddLine('Adjust the vertical and horizontal size controls');
+      AddLine('until the circles appear perfectly circular.');
       AddLine('');
       AddLine('This test may not be appropriate for all CGA RGB monitors.');
       AddLine('');
@@ -322,10 +321,10 @@ begin
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('The following test pattern displays all available colors, with each');
-    AddLine('color labeled.  Use this pattern to adjust any color, saturation, or hue');
-    AddLine('controls if present on your RGB monitor.  The goal of this is to get');
+    AddLine('color labeled.  Use this pattern to adjust color, saturation, or hue');
+    AddLine('controls if present on your RGB monitor.  The goal is to get');
     AddLine('each color as rich as possible without overdriving the monitor (ie.');
-    AddLine('making the colors ''fuzzy'' or blurred).  As for hue adjustment, a good');
+    AddLine('making the colors "fuzzy" or blurred).  As for hue adjustment, a good');
     AddLine('rule of thumb is that "yellow" (the color next to white) should be the');
     AddLine('color of a lemon, and not reddish or greenish in tint.');
     AddLine('');
@@ -377,7 +376,7 @@ begin
 
   for foo:=0 to 7 do Screen.WritePlain((foo*10)+1,1,' Color #'+inttostr(foo));
   for foo:=8 to 15 do Screen.WritePlain((foo*10)+1,21,' Color #'+inttostr(foo));
-  {Screen.WriteCenter(25,$0F,'Press any key to rearrange into horizontal bars.');}
+  {Screen.WriteCenter(25,$0F,'Hit a key to rearrange into horizontal bars.');}
   PauseUser;
 
   Screen.clear($0e,#0);
@@ -415,14 +414,14 @@ begin
     fillbox(1,24,80,24,$ff,0);
   end;
 
-  {Screen.WriteCenter(25,$0F,'Press any key to rearrange into vertical bars.');}
+  {Screen.WriteCenter(25,$0F,'Hit a key to rearrange into vertical bars.');}
   PauseUser;
   Screen.clear($0e,#0);
 
   for foo:=0 to 15 do
     Screen.FillBox((foo*5)+1,1,(foo*5)+5,24,(foo shl 4) OR foo,0);
 
-  {Screen.WriteCenter(25,$0F,'Press any key to exit.');}
+  {Screen.WriteCenter(25,$0F,'Hit a key to exit.');}
   PauseUser;
   m6845_SetMode(c_fast_char_clock+c_videosignal_enable+c_blinking_text);
   PostTest;
@@ -457,8 +456,8 @@ begin
     AddLine('');
     AddLine('The following test pattern displays all available CGA colors arranged');
     AddLine('in two luminance ramps meant to calibrate monochrome monitors connected');
-    AddLine('to CGA-compatible display adapters.  (These adapters emulate CGA by');
-    AddLine('converting all 16 RGBI colors into 8 or 16 shades of gray for output');
+    AddLine('to compatible display adapters.  (These adapters emulate CGA by');
+    AddLine('converting colors into 8 or 16 shades of gray for output');
     AddLine('on either a standard or specialized monochrome monitor.)');
     AddLine('');
     AddLine('On this test plate, the brightness control affects all 16 boxes,');
@@ -566,11 +565,12 @@ begin
     AddLine('The following screens allow you to inspect your RGB monitor');
     AddLine('for color uniformity and purity.  We will rotate through the');
     AddLine('RED, GREEN, BLUE, and INTENSITY pins on your RGB monitor to');
-    AddLine('fill the entire screen with a solid color, which allows you');
-    AddLine('to inspect for dark areas or other purity issues.');
+    AddLine('fill the entire screen with a solid color, which lets you');
+    AddLine('check for dark areas or other purity issues.');
+    AddLine('This test is also useful if trying to degauss a monitor.');
     AddLine('');
     AddLine('Controls: SPACE advances through each pin');
-    AddLine('          0-9,A-F will force a specific color to be displayed');
+    AddLine('          0-9,A-F will force display of specific colors');
     AddLine('');
     AddLine('During this test, the hsync and vsync pulses are disabled,');
     AddLine('allowing for better measurement of the CGA composite signal');
@@ -651,13 +651,13 @@ Procedure AddLinearityText;
 begin
   with InfoPrompt do begin
     AddLine('This test helps measure monitor linearity and convergence.');
-    AddLine('Two patterns will be displayed; press a key to advance them.');
+    AddLine('Two patterns will be displayed:');
     AddLine('');
-    AddLine('Linearity: A grid of rectangles will be shown.  Each complete');
-    AddLine('rectangle should be the same size as every other complete rectangle.');
+    AddLine('Linearity: A grid of rectangles will be shown.');
+    AddLine('Rectangles should all be the same size.');
     AddLine('');
-    AddLine('Convergence: A grid of dots will be shown.  Each dot should be');
-    AddLine('as pure to "white" as possible without any color fringing.');
+    AddLine('Convergence: A grid of dots will be shown.');
+    AddLine('Dots should be as "white" as possible without color fringing.');
   end;
 end;
 

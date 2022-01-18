@@ -16,7 +16,7 @@ implementation
 
 uses
   strings,support,m6845ctl,{ztimer,}cgaccommon,cgastaticdata,
-  TInterrupts,{cgalib_g,}cgalib,tfastwrite,
+  TInterrupts,{cgalib_g,}cgalib,
   totsys,totmsg,totIO1,totfast;
 
 var
@@ -40,8 +40,6 @@ var
   counter:word;
   percount:boolean;
   samples:array[0..dampening-1] of word;
-  sp:pointer;
-  s:string;
 
 begin
   {!Should this start with 59.92 as default?
@@ -63,29 +61,17 @@ begin
   if Result=Escaped then exit;
   PrepTest;
   m6845_SetCursorLoc(80*25); {hide cursor offscreen}
-  tfastinit(80,25);
-  tfpreventsnow:=true;
-  sp:=ptr($b800,0);
   rhz:=PITFreq/262/76;
   str(rhz:2:4,rst);
-  s:='CGA''s true vertical refresh: '+rst+' Hz';
-  tfastwritexy(@s,sp,0,4,$0F);
-  s:='Note: These values may never settle due to interrupt jitter and DRAM refresh.';
-  tfastwritexy(@s,sp,0,6,$07);
-  s:='Measurements not guaranteed 100% accurate; consult your hardware documentation.';
-  tfastwritexy(@s,sp,0,7,$07);
-  s:='Press any key to exit the measurement.';
-  tfastwritexy(@s,sp,0,9,$07);
+  Screen.WriteAt(1,5,$0F,'CGA true vertical refresh: '+rst+' Hz');
+  Screen.WriteAt(1,7,$07,'Note: These values may never settle due to interrupt jitter and DRAM refresh.');
+  Screen.WriteAt(1,8,$07,'Measurements not guaranteed 100% accurate; consult your hardware documentation.');
+  Screen.WriteAt(1,10,$07,'Press any key to exit the measurement.');
 
-  s:='Refresh rate detected (now):         Hz';
-  tfastwritexy(@s,sp,0,0,$07);
-  s:='Refresh rate detected (min):         Hz';
-  tfastwritexy(@s,sp,0,1,$07);
-  s:='Refresh rate detected (max):         Hz';
-  tfastwritexy(@s,sp,0,2,$07);
-  s:='Refresh rate detected (avg):         Hz';
-  tfastwritexy(@s,sp,0,3,$0F);
-
+  Screen.WriteAt(1,1,$07,'Refresh rate detected (now):         Hz');
+  Screen.WriteAt(1,2,$07,'Refresh rate detected (min):         Hz');
+  Screen.WriteAt(1,3,$07,'Refresh rate detected (max):         Hz');
+  Screen.WriteAt(1,4,$0F,'Refresh rate detected (avg):         Hz');
 
   {init channel 0, 3=access mode lobyte/hibyte, mode 2, 16-bit binary}
   {We do this so we can get a sensible countdown value from mode 2 instead
@@ -173,10 +159,10 @@ begin
     if PITFreq/w > maxHz
       then maxHz:= PITFreq/w;
 
-    str(  rhz:2:4,rst); tfastwritexy(@rst,sp,29,0,$07);
-    str(minhz:2:4,rst); tfastwritexy(@rst,sp,29,1,$07);
-    str(maxhz:2:4,rst); tfastwritexy(@rst,sp,29,2,$07);
-    str(avghz:2:4,rst); tfastwritexy(@rst,sp,29,3,$0F);
+    str(  rhz:2:4,rst); Screen.WriteAt(30,1,$07,rst);
+    str(minhz:2:4,rst); Screen.WriteAt(30,2,$07,rst);
+    str(maxhz:2:4,rst); Screen.WriteAt(30,3,$07,rst);
+    str(avghz:2:4,rst); Screen.WriteAt(30,4,$0F,rst);
 
     {add "quality" measure of the average}
     if counter=0 then percount:=false;
@@ -184,7 +170,7 @@ begin
       avghz:=((counter+1)/dampening)*100;
       str(avghz:2:1,rst);
       rst:=rst+'%';
-      tfastwritexy(@rst,sp,40,3,$0F);
+      Screen.WriteAt(41,4,$0F,rst);
     end;
 
   until keypressed;
