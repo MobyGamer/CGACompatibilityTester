@@ -1,4 +1,4 @@
-{$M 8192,0,655360}
+{$M 8192,0,200000}
 {compilation flags}
 
 {{$DEFINE OVERLAY} {use overlays} {only for when trying to develop on 5160}
