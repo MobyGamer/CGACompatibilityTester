@@ -7,3 +7,5 @@ The CGA Compatibility Tester, as its name implies, is a program that benchmarks 
   * Calibrate your CGA RGB monitor for maximum enjoyment
   * Calibrate your video capture equipment for the best possible video capture
   * Satisfy your curiosity about how CGA can be tweaked
+
+Full documentation is included in CGA_COMP.TXT.
