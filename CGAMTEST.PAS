@@ -287,47 +287,23 @@ end;
 
 Procedure CalibColor;
 const
-  labello1='                                                                        Light   ';
-  labello2='  Black      Blue     Green      Cyan      Red     Magenta    Brown     Gray    ';
-  labelhi1='   Dark     Light     Light     Light     Light     Light                       ';
-  labelhi2='   Gray      Blue     Green      Cyan      Red     Magenta    Yellow    White   ';
   singleLineLabel='Blck Blue Grn  Cyan Red  Mgnt Brwn LGry DGry LBlu LGrn LCya LRed LMgn Yelo Whit ';
+  allcombosline='All combinations of all background and foreground colors:';
 
-(*
-  blabels:array[0..15] of string[15]=(
-  'Black',
-  'Blue',
-  'Green',
-  'Cyan',
-  'Red',
-  'Magenta',
-  'Brown',
-  'Light Gray',
-  'Dark Gray',
-  'Light Blue',
-  'Light Green',
-  'Light Cyan',
-  'Light Red',
-  'Light Magenta',
-  'Yellow',
-  'White'
-  );
-*)
 var
-  foo,fooattr,ba,fo,backfore:byte;
+  foo,fooattr,ba,fo,backfore,row,col:byte;
   ad:word;
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mColor].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
-    AddLine('The following test pattern displays all available colors, with each');
-    AddLine('color labeled.  Use this pattern to adjust color, saturation, or hue');
-    AddLine('controls if present on your RGB monitor.  The goal is to get');
-    AddLine('each color as rich as possible without overdriving the monitor (ie.');
-    AddLine('making the colors "fuzzy" or blurred).  As for hue adjustment, a good');
-    AddLine('rule of thumb is that "yellow" (the color next to white) should be the');
-    AddLine('color of a lemon, and not reddish or greenish in tint.');
+    AddLine('The following test pattern displays all available colors, with labels.');
+    AddLine('Use this pattern to adjust color, saturation, and hue controls on your');
+    AddLine('RGB monitor.  Aim for getting each color as rich as possible without');
+    AddLine('overdriving the monitor (ie. no fuzzy or blurred edges).  For hue');
+    AddLine('adjustment, "yellow" (the color next to white) should be the color of a');
+    AddLine('lemon, and not red or green in tint.');
     AddLine('');
     BrownNote;
     AddLine('');
@@ -341,62 +317,17 @@ begin
 
   {disable blink in text mode to gain all 16 colors for background}
   m6845_SetMode(c_fast_char_clock+c_videosignal_enable);
-  Screen.WritePlain(1,1,'All combinations of all background and foreground colors:');
 
-  for foo:=3 to 16+3-1 do
-    Screen.WritePlain(1,foo,SingleLineLabel);
+  {show test pattern chars}
+  for foo:=2 to 25 do Screen.WritePlain(1,foo,SingleLineLabel);
+  Screen.WriteCenter(1,$0F,allcombosline);
   {color them in:}
-  for ba:=0 to 15 do begin
-    fo:=0;
-    ad:=(160*2)+(160*ba);
-    for foo:=1 to 160 do begin
-      backfore:=(ba SHL 4) OR fo;
-      mem[$b800:ad+foo]:=backfore;
-      inc(foo);
-      if (foo mod 10)=0 then inc(fo);
+  for row:=0 to 24 do begin
+    for col:=0 to 79 do begin
+      backfore:=((row AND $0F) SHL 4) OR (col div 5);
+      mem[$b800:(160*row)+1+(col * 2)]:=backfore;
     end;
-
   end;
-(*
-  for foo:=0 to 7 do begin
-    {build rotating text attribute byte}
-    asm
-      mov cl,4
-      mov al,foo
-      mov bl,al
-      shl al,cl
-      add bl,2 {shifting only one over makes some hard to read}
-      and bl,00001111b
-      or  al,bl
-      mov fooattr,al
-    end;
-    Screen.FillBox(1+(foo*10),1,10+(foo*10),12,fooattr,0);
-  end;
-  for foo:=8 to 15 do begin
-    {build rotating text attribute byte}
-    asm
-      mov cl,4
-      mov al,foo
-      mov bl,al
-      shl al,cl
-      add bl,2
-      and bl,00001111b
-      or  al,bl
-      mov fooattr,al
-    end;
-    Screen.FillBox(1+(foo*10),12,10+(foo*10),23,fooattr,0);
-  end;
-
-  Screen.WritePlain(1,2,labello1);
-  Screen.WritePlain(1,3,labello2);
-  Screen.WritePlain(1,23,labelhi1);
-  Screen.WritePlain(1,24,labelhi2);
-
-  for foo:=0 to 7 do Screen.WritePlain((foo*10)+1,1,' Color #'+inttostr(foo));
-  for foo:=8 to 15 do Screen.WritePlain((foo*10)+1,21,' Color #'+inttostr(foo));
-  {Screen.WriteCenter(25,$0F,'Hit a key to rearrange into horizontal bars.');}
-  *)
-
 
   PauseUser;
 
@@ -440,7 +371,8 @@ begin
   Screen.clear($0e,#0);
 
   for foo:=0 to 15 do
-    Screen.FillBox((foo*5)+1,1,(foo*5)+5,24,(foo shl 4) OR foo,0);
+{    Screen.FillBox((foo*5)+1,1,(foo*5)+5,24,(foo shl 4) OR foo,0);}
+    Screen.FillBox((foo*5)+1,1,(foo*5)+5,25,(foo shl 4) OR (foo xor 8),2);
 
   {Screen.WriteCenter(25,$0F,'Hit a key to exit.');}
   PauseUser;
