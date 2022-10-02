@@ -13,7 +13,7 @@ type
   mBMR,mBMW,mOARB,mOAWB,
   mBCol,mMCol,mHCol,mPal,
   m40col,mTHCB,mTCur,mTSnow,mFont,
-  mBCal,mCCal,mColor,mMono,mMoire,mMoireColor,mUniform,mLinearRGB,
+  mBCal,mCCal,mColor,mMono,mMoire,mMoireColor,mUniform,mLinearRGB,mMultiburst,
   mVert,mHoriz,mTCustom80,mTCustom90,mInterlace,mPos,mAddr,
   mCompWhich,mCompLo,mCompHi,mAspectNTSC,
   mCapBarsRGB,mCapBarsComp,mCapMotion,mCapRGBI,mSync,mCamera,
@@ -80,7 +80,7 @@ const
     blurb:'Calibrate all monitor controls'),
     (id:43; {mMono} title:'Monochrome';
     blurb:'Calibrate all monitor controls for "monochrome" CGA monitors'),
-    (id:44; {mMoire} title:'Moire (interference)';
+    (id:44; {mMoire} title:'Focus, moire, interference';
     blurb:'Calibrate horizontal/vertical size and aperture'),
     (id:45; {mMoireColor} title:'Moire (color/shadowmask)';
     blurb:'Shadow mask adjustments and scaler conversions'),
@@ -88,6 +88,8 @@ const
     blurb:'Examine monitor for color uniformity/purity and convergence/pincushion'),
     (id:47; {mLinearRGB} title:'Linearity';
     blurb:'Examine monitor for display linearity'),
+    (id:48; {mMultiburst} title:'Multiburst';
+    blurb:'Examine frequency response'),
 
     (id:50; {mVert} title:'Vertical retrace';
     blurb:'Detect and display vertical refresh rate'),
@@ -114,8 +116,8 @@ const
     blurb:'Simple 40-column color plate for composite color monitors'),
     (id:62; {mCompHi} title:'Composite: Low-res graphics';
     blurb:'Simple 160x200 color plate for composite color monitors'),
-    (id:63; {mAspectNTSC} title:'Aspect Ratio';
-    blurb:'Calibrate horizontal/vertical size adjustment'),
+    (id:63; {mAspectNTSC} title:'Aspect Ratio & Crosshatch';
+    blurb:'Calibrate horizontal/vertical size adjustment.  Also includes crosshatches.'),
 
     (id:70; {mCapBarsRGB} title:' RGB Color Bars ';
     blurb:'All 16 RGB color bars for calibrating capture cards'),

@@ -13,6 +13,7 @@ Procedure CalibMonochrome;
 Procedure CalibAspectNTSC;
 Procedure CalibUniform;
 Procedure CalibLinearRGB;
+Procedure CalibMultiburst;
 
 implementation
 
@@ -120,10 +121,12 @@ begin
     init(2,strpas(menuLookup[mMoire].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
-    AddLine('What follows are three test patterns to help calibrate');
-    AddLine('any horizontal, vertical, or rotational monitor controls.');
-    AddLine('The patterns are engineered to display "moire" interference');
-    AddLine('patterns.  Hit a key during the test to move to the next pattern.');
+    AddLine('What follows are four test patterns to help calibrate');
+    AddLine('horizontal, vertical, rotational, or focus controls.');
+    AddLine('The patterns are engineered to display "moire"');
+    AddLine('interference patterns.');
+    AddLine('');
+    AddLine('Hit a key during the test to move to the next pattern.');
     AddLine('');
     SetOption(1,cstring,67,Finished);
     SetOption(2,astring,65,Escaped);
@@ -153,6 +156,17 @@ begin
     xor di,di
     mov cx,$2000
     mov ax,0011001100110011b
+    rep stosw
+  end;
+  PauseUser;
+
+  asm
+    {third pattern: thin vertical lines}
+    mov ax,$b800
+    mov es,ax
+    xor di,di
+    mov cx,$2000
+    mov ax,0101010101010101b
     rep stosw
   end;
   PauseUser;
@@ -600,20 +614,6 @@ begin
   PostTest;
 end;
 
-Procedure AddLinearityText;
-begin
-  with InfoPrompt do begin
-    AddLine('This test helps measure monitor linearity and convergence.');
-    AddLine('Two patterns will be displayed:');
-    AddLine('');
-    AddLine('Linearity: A grid of rectangles will be shown.');
-    AddLine('Rectangles should all be the same size.');
-    AddLine('');
-    AddLine('Convergence: A grid of dots will be shown.');
-    AddLine('Dots should be as "white" as possible without color fringing.');
-  end;
-end;
-
 Procedure CalibLinearRGB;
 const
   xdiv=20;
@@ -629,7 +629,14 @@ begin
     init(2,strpas(menuLookup[mLinearRGB].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
-    AddLinearityText;
+    AddLine('This test helps measure monitor linearity and convergence.');
+    AddLine('Two patterns will be displayed:');
+    AddLine('');
+    AddLine('Linearity: A grid of rectangles will be shown.');
+    AddLine('Rectangles should all be the same size.');
+    AddLine('');
+    AddLine('Convergence: A grid of dots will be shown.');
+    AddLine('Dots should be as "white" as possible without color fringing.');
     AddLine('');
     {AddLine('The geometry in this test is for RGB monitors.');}
     AddLine('The video mode used in this test is intended for RGB monitors.');
@@ -665,6 +672,53 @@ begin
     {now make a convergence pattern}
     for xcoll:=0 to (width div 2)-1 do line(xcoll*2,0,xcoll*2,height-1,0);
     for ycolt:=0 to (height div 2)-1 do line(0,ycolt*2,width-1,ycolt*2,0);
+    PauseUser;
+  end;
+  dispose(vs,done);
+  PostTest;
+end;
+
+Procedure CalibMultiburst;
+const
+  accel=0.05;
+  thickness:real=0.05;
+var
+  x,barw,cols:integer;
+begin
+  with InfoPrompt do begin
+    init(2,strpas(menuLookup[mLinearRGB].title));
+    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
+    AddLine('');
+    AddLine('This test simulates a traditional multiburst test pattern,');
+    AddLine('used to ascertain the frequency response of a video system.');
+    AddLine('');
+    AddLine('The video mode used in this test is intended for RGB monitors.');
+    AddLine('');
+    SetOption(1,cstring,67,Finished);
+    SetOption(2,astring,65,Escaped);
+    Result:=Show;
+    Done;
+  end;
+  if Result=Escaped then exit;
+  Preptest;
+  vs:=new(pvidCGAGmode6,Init(mode6,true));
+  with vs^ do begin
+    box(0,0,width-1,height-1,maxcolors-1);
+    x:=width-1;
+    while x > 0 do begin
+      barw:=trunc(thickness);
+      for barw:=0 to trunc(thickness) do begin
+        line(x,0,x,height-1,maxcolors-1);
+        dec(x); if x<0 then break;
+      end;
+      for barw:=0 to trunc(thickness) do begin
+        line(x,0,x,height-1,0);
+        dec(x); if x<0 then break;
+      end;
+      thickness:=thickness + (thickness * accel);
+    end;
+    {rect(0,0,width-1,height-1,maxcolors-1);
+    rect(1,1,width-2,height-2,maxcolors-1);}
     PauseUser;
   end;
   dispose(vs,done);

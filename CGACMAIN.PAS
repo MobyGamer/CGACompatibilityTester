@@ -180,8 +180,11 @@ begin
       Init;
       SetStyleTitle(6,'Monitor Calibration');
       SetMessageXY(1,25);
-      for actloop:=mBCal to mLinearRGB do
+      for actloop:=mBCal to mMultiburst do
         AddFullItem(strpas(menuLookup[actLoop].title),menuLookup[actLoop].id,0,strpas(menuLookup[actLoop].blurb),nil);
+      {add aspect ratio selection:}
+      AddFullItem(strpas(menuLookup[mAspectNTSC].title),menuLookup[mAspectNTSC].id,0,
+                  strpas(menuLookup[mAspectNTSC].blurb),nil);
       AddFullItem('Composite Monitor Tests    ',0,0,'Calibration tests specific to a Composite Color monitor',@CompMenu);
     end;
 
@@ -189,7 +192,7 @@ begin
       Init;
       SetStyleTitle(6,'Composite Monitor Tests');
       SetMessageXY(1,25);
-      for actloop:=mCompWhich to mAspectNTSC do
+      for actloop:=mCompWhich to {mAspectNTSC}mCompHi do
         AddFullItem(strpas(menuLookup[actLoop].title),menuLookup[actLoop].id,0,strpas(menuLookup[actLoop].blurb),nil);
     end;
 
@@ -268,6 +271,7 @@ begin
         mAspectNTSC:CalibAspectNTSC;
         mUniform:CalibUniform;
         mLinearRGB:CalibLinearRGB;
+        mMultiburst:CalibMultiburst;
         mCapBarsRGB:BarsRGB;
         mCapBarsComp:BarsComp;
         mCapMotion:MotionTest;

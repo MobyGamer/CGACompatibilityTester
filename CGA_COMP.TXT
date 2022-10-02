@@ -79,7 +79,7 @@ Command-line arguments are:
 Argument  | Action
 ----------+-------
 /nXX      | Delay XX seconds (default = 5) before exiting a test plate.
-aspect    | Display the NTSC monitor aspect ratio calibration test.
+aspect    | Display the monitor aspect ratio calibration test.
 cbars     | Display composite default color bars sorted by luminance.
 rbars     | Display RGBI calibration bars (meant for capture devices).
 motion    | Display 60Hz motion test.  (Runs for 8 seconds; ignores /n values)
@@ -89,7 +89,7 @@ audiosync | Display video+audio sync test
 You can mix and match these on a single command-line.  For example, if trying
 to capture composite CGA, this would make a good leader:
 
-CGA_COMP /n10 audiosync aspect cbars motion audiosync
+        CGA_COMP /n10 audiosync aspect cbars motion audiosync
 
 Each test plate will display for 10 seconds before moving to the second
 test.  Also note that "audiosync" is provided both at the beginning and the
@@ -211,7 +211,9 @@ Version History:
         Added a yellow border that draws when audio sounds in sync test.
 1.27.0: Added camera calibration plates.
 1.27.1: Refactored to save 1k of code and 13k of RAM.
-1.28:   Menu rearrangement to be more logical; better monitor color test.
+1.28:   Menu rearrangement to be more logical.
+        Better monitor color test suggested by Adrian Black.
+        Added Multiburst test pattern.
 
 Possible future enhancements:
 - Test on PCjr and ensure all tests work on PCjr
