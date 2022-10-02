@@ -15,13 +15,29 @@ implementation
 uses
   support,strings,m6845ctl,cmdlin,
   totmsg,totmenu,totinput,totfast,totIO1,
-  {$IFDEF DETECT} topb_detect, {$ENDIF}
   cgabtests,cgattests,cgactests,cgamtests,cgartests,comptests,cgacapture,cgaccommon;
 
 var
-  MainMenu,SpeedMenu,ColorMenu,TextMenu,CalibMenu,Regmenu,CompMenu,CapMenu:MenuOBJ;
+  MainMenu,CGACompatMenu,SpeedMenu,ColorMenu,TextMenu,CalibMenu,Regmenu,CompMenu,CapMenu:MenuOBJ;
 
 Procedure PopIntro;
+
+const
+  IntroLines=10;
+  IntroText:array[0..IntroLines+1] of pChar=(
+    '',
+    ' The CGA Compatibility Tester stresses nearly every capability of ',
+    ' the IBM Color Graphics Adapter (CGA).  This can be used to:',
+    '',
+    ' - Verify your CGA card is 100% compatible with the real IBM CGA ',
+    ' - Calibrate your RGB or Composite monitor',
+    ' - Calibrate your CGA capture device or CGA-to-HDMI converter',
+    ' - Benchmark your adapter''s speed',
+    ' - Satisfy your curiousity about how CGA can be tweaked',
+    '',
+    ' Consult CGA_COMP.TXT for more info.',
+    ''
+  );
 
 var
   foomsg:MessageObj;
@@ -29,33 +45,22 @@ var
 begin
   with foomsg do begin
     init(2,strpas(menuLookup[mIntro].title));
-    AddLine('');
-    AddLine(' The CGA Compatibility Tester stresses nearly every capability of ');
-    AddLine(' the IBM Color Graphics Adapter (CGA).  This can be used to:');
-    AddLine('');
-    AddLine(' - Verify your CGA card is 100% compatible with the real IBM CGA ');
-    AddLine(' - Calibrate your RGB or Composite monitor');
-    AddLine(' - Benchmark adapter RAM speed');
-    AddLine(' - Satisfy your curiousity about how CGA can be tweaked');
-    AddLine('');
-    AddLine(' Consult CGA_COMP.TXT for more info.');
-    AddLine('');
-    {for loop:=0 to 12 do AddLine(strpas(IntroText[loop]));}
+    for loop:=0 to IntroLines+1 do AddLine(strpas(IntroText[loop]));
     show;
     done;
   end;
 end;
 
 Procedure PopAbout;
-{const
-  AboutText:array[0..5] of pChar=(
+const
+  AboutTextLines=3;
+  AboutText:array[0..AboutTextLines+1] of pChar=(
     '',
     ' The CGA Compatibility Tester',
-    ' Version 1.11, 20160320',
-    ' by Jim Leonard',
-    ' trixter@oldskool.org',
+    ' Version 1.28, 20221001',
+    ' by Jim Leonard (trixter@oldskool.org) ',
     ''
-  );}
+  );
 
 var
   foomsg:MessageObj;
@@ -64,14 +69,7 @@ var
 begin
   with foomsg do begin
     init(2,strpas(menuLookup[mAbout].title));
-    {for loop:=0 to 5 do AddLine(strpas(AboutText[loop]));}
-    AddLine('');
-    AddLine(' The CGA Compatibility Tester');
-    AddLine(' Version 1.27.1, 20220117');
-    {AddLine(' by Jim Leonard');}
-    AddLine(' trixter@oldskool.org');
-    AddLine('');
-
+    for loop:=0 to AboutTextLines+1 do AddLine(strpas(AboutText[loop]));
     s:=' Free heap: '+inttostr(memavail div 1024)+' KB '; AddLine(s);
     s:=''; AddLine(s);
     show;
@@ -79,52 +77,23 @@ begin
   end;
 end;
 
-{$IFDEF DETECT}
-Procedure PopDetect;
-var
-  foomsg:MessageObj;
-begin
-  with foomsg do begin
-    init(2,strpas(menuLookup[mDetect].title));
-    Addline('');
-    AddLine('We are now going to detect your system hardware.');
-    AddLine('This is an intensive process that takes a while');
-    AddLine('to run on slow hardware.  Please wait up to fifteen');
-    AddLine('seconds for the results.');
-    SetOption('  ~D~etect Hardware  ',68);
-    show;
-    done;
-
-    init(2,strpas(menuLookup[mDetect].title));
-    Addline('');
-    AddLine('Machine type: '+WhatMachineType);
-    AddLine('CPU type: '+WhatCPU);
-    AddLine('CPU speed: '+WhatMHz);
-    AddLine('Video adapter: '+WhatVideoAdapter);
-    AddLine(WhatBIOS);
-    Addline('');
-    show;
-    done;
-  end;
-end;
-{$ENDIF}
-
 procedure InitCCT;
-{const
-  DisclaimerText:array[0..11] of pChar=(
+const
+  DiscLines=10;
+  DisclaimerText:array[0..DiscLines+1] of pChar=(
     '',
     'This program benchmarks and stresses nearly every aspect of the IBM CGA',
     '(Color Graphics Adapter).  Because this program stresses your display',
-    'system, there is a remote possibility that the use of this program could',
+    'system, there is a remote possibility that using this program could',
     'damage your monitor.  The author developed this program on a true IBM',
-    'CGA with a true IBM 5153 color display, and has taken every precaution',
-    'to avoid settings that would damage a monitor -- but if you continue to',
-    'use this program, you agree that the author is NOT RESPONSIBLE for any',
-    'damage that may occur during its use.',
+    'CGA+5153 color display, and has taken every precaution to avoid',
+    'settings that would damage a monitor.  However, if you continue to use',
+    'this program, you agree that the author is NOT RESPONSIBLE for any',
+    'accidental damage that may occur.',
     '',
     'Do you agree to these terms?',
     ''
-  );}
+  );
 
 var
   PromptWin:PromptOBJ;
@@ -146,19 +115,7 @@ begin
     Screen.Clear(TWhite,'°'); {paint the screen}
     with PromptWin do begin
       Init(1,' Disclaimer and Terms of Use ');
-      AddLine('');
-      AddLine('This program benchmarks and stresses nearly every aspect of the IBM CGA');
-      AddLine('(Color Graphics Adapter).  Because this program stresses your display');
-      AddLine('system, there is a remote possibility that using this program could');
-      AddLine('damage your monitor.  The author developed this program on a true IBM');
-      AddLine('CGA+5153 color display, and has taken every precaution to avoid');
-      AddLine('settings that would damage a monitor.  However, if you continue to use');
-      AddLine('this program, you agree that the author is NOT RESPONSIBLE for any');
-      AddLine('accidental damage that may occur.');
-      AddLine('');
-      AddLine('Do you agree to these terms?');
-      AddLine('');
-      {for loop:=0 to 11 do AddLine(strpas(DisclaimerText[loop]));}
+      for loop:=0 to DiscLines+1 do AddLine(strpas(DisclaimerText[loop]));
       SetOption(1,'  ~Y~es  ',89,Finished);
       SetOption(2,'  ~N~o  ',78,Escaped);
       Result := Show;
@@ -177,18 +134,22 @@ begin
       Init;
       SetStyleTitle(6,'The CGA Compatibility Tester');
       AddFullItem(strpas(menuLookup[mIntro].title),menuLookup[mIntro].id,0,strpas(menuLookup[mIntro].blurb),nil);
-      AddFullItem(' Monitor Calibration        ',0,0,'Various patterns/procedures to calibrate your RGB monitor',@CalibMenu);
+      AddFullItem(' CGA Compatibility          ',0,0,
+        'Tests for verifying your CGA card is compatible with IBM''s implementation',@CGACompatMenu);
+      AddFullItem(' Monitor Calibration Plates ',0,0,'Various patterns/procedures to calibrate your RGB monitor',@CalibMenu);
+      AddFullItem(' Capture Calibration Plates ',0,0,'Test plates to help calibrate capture cards',@CapMenu);
       AddFullItem(' Video RAM Speed Benchmark  ',0,0,'Video Adapter RAM speed Benchmarks',@SpeedMenu);
+      AddFullItem(strpas(menuLookup[mAbout].title),menuLookup[mAbout].id,0,strpas(menuLookup[mAbout].blurb),nil);
+      SetMessageXY(1,25);
+    end;
+
+    with CGACompatMenu do begin
+      Init;
+      SetStyleTitle(6,'Speed Benchmarks');
+      SetMessageXY(1,25);
       AddFullItem(' Color Select Register      ',0,0,'Color Select Register and palette tests',@ColorMenu);
       AddFullItem(' Textmode Manipulation      ',0,0,'Tests and sets various textmode attributes',@TextMenu);
       AddFullItem(' M6845 Compatibility        ',0,0,'Reprograms the Motorola 6845 Character Generator',@RegMenu);
-      AddFullItem(' Composite Monitor Tests    ',0,0,'Calibration tests specific to a Composite Color monitor',@CompMenu);
-      AddFullItem(' Capture Calibration Plates ',0,0,'Test plates to help calibrate capture cards',@CapMenu);
-      {$IFDEF DETECT}
-      AddFullItem(strpas(menuLookup[mDetect].title),menuLookup[mDetect].id,0,strpas(menuLookup[mDetect].blurb),nil);
-      {$ENDIF}
-      AddFullItem(strpas(menuLookup[mAbout].title),menuLookup[mAbout].id,0,strpas(menuLookup[mAbout].blurb),nil);
-      SetMessageXY(1,25);
     end;
 
     with SpeedMenu do begin
@@ -219,8 +180,9 @@ begin
       Init;
       SetStyleTitle(6,'Monitor Calibration');
       SetMessageXY(1,25);
-      for actloop:=mBCal to mLinearComp do
+      for actloop:=mBCal to mLinearRGB do
         AddFullItem(strpas(menuLookup[actLoop].title),menuLookup[actLoop].id,0,strpas(menuLookup[actLoop].blurb),nil);
+      AddFullItem('Composite Monitor Tests    ',0,0,'Calibration tests specific to a Composite Color monitor',@CompMenu);
     end;
 
     with CompMenu do begin
@@ -253,7 +215,7 @@ procedure DoCCT;
 const
   ni=' NOT IMPLEMENTED ';
 var
-  MenuChoice:byte;
+  MenuChoice:word;
   SaveScreen:ScreenOBJ;
   Msg:MessageObj;
   menuaction,loop:userActions;
@@ -274,9 +236,6 @@ begin
         mnull:{do nothing, user hit escape or something};
         mIntro:PopIntro;
         mAbout:PopAbout;
-        {$IFDEF DETECT}
-        mDetect:PopDetect;
-        {$ENDIF}
         mTSnow:TestSnow;
         mBMR:BenchReadSpeed;
         mBMW:BenchWriteSpeed;
@@ -309,7 +268,6 @@ begin
         mAspectNTSC:CalibAspectNTSC;
         mUniform:CalibUniform;
         mLinearRGB:CalibLinearRGB;
-        mLinearComp:CalibLinearComp;
         mCapBarsRGB:BarsRGB;
         mCapBarsComp:BarsComp;
         mCapMotion:MotionTest;
@@ -382,6 +340,7 @@ procedure DoneCCT;
 begin
   if not interactive then exit;
   MainMenu.done;
+  CGACompatMenu.done;
   SpeedMenu.done;
   ColorMenu.done;
   TextMenu.done;

@@ -13,18 +13,15 @@ type
   mBMR,mBMW,mOARB,mOAWB,
   mBCol,mMCol,mHCol,mPal,
   m40col,mTHCB,mTCur,mTSnow,mFont,
-  mBCal,mCCal,mColor,mMono,mMoire,mMoireColor,mUniform,mLinearRGB,mLinearComp,
+  mBCal,mCCal,mColor,mMono,mMoire,mMoireColor,mUniform,mLinearRGB,
   mVert,mHoriz,mTCustom80,mTCustom90,mInterlace,mPos,mAddr,
   mCompWhich,mCompLo,mCompHi,mAspectNTSC,
   mCapBarsRGB,mCapBarsComp,mCapMotion,mCapRGBI,mSync,mCamera,
   mIntro,mAbout,
-  {$IFDEF DETECT}
-  mDetect,
-  {$ENDIF}
   mnull
   );
   menuLookuptype=record
-    id:byte;
+    id:word;
     title,blurb:pchar;
   end;
   menuArray=array[userActions] of menuLookuptype;
@@ -39,7 +36,7 @@ const
   of data in a seperate file.  Contents, in order:
     cga/mda font data:     8192 bytes
     shaded cubes picture: 16000 bytes
-    Vile Rancour picture: 16000 bytes
+    Painted face picture: 16000 bytes
     aspect ratio pattern: 16384 bytes
     whichCGA pic:         15360 bytes
     boxdata:                800 bytes
@@ -89,10 +86,8 @@ const
     blurb:'Shadow mask adjustments and scaler conversions'),
     (id:46; {mUniform} title:'Uniformity and Convergence';
     blurb:'Examine monitor for color uniformity/purity and convergence/pincushion'),
-    (id:47; {mLinearRGB} title:'Linearity (RGB)';
-    blurb:'Examine RGB monitor for display linearity'),
-    (id:48; {mLinearComp} title:'Linearity (Composite)';
-    blurb:'Examine Composite monitor for display linearity'),
+    (id:47; {mLinearRGB} title:'Linearity';
+    blurb:'Examine monitor for display linearity'),
 
     (id:50; {mVert} title:'Vertical retrace';
     blurb:'Detect and display vertical refresh rate'),
@@ -135,16 +130,12 @@ const
     (id:75; {mCamera} title:' Camera calibration ';
     blurb:'A few screens to help calibrate camera focus and white balance'),
 
-    (id:100; {mIntro} title:' Introduction ';
+    (id:1000; {mIntro} title:' Introduction ';
     blurb:'What this program does and why you would want to use it'),
-    (id:101; {mAbout} title:' About this program ';
+    (id:1001; {mAbout} title:' About this program ';
     blurb:'Version and contact information'),
-    {$IFDEF DETECT}
-    (id:102; {mDetect} title:' Detect System Hardware ';
-    blurb:'Attempts to detect the video adapter, as well as other system details'),
-    {$ENDIF}
 
-    (id:200; {mAbout} title:'null title';
+    (id:2000; {mAbout} title:'null title';
     blurb:'nullblurb')
   );
 

@@ -13,7 +13,6 @@ Procedure CalibMonochrome;
 Procedure CalibAspectNTSC;
 Procedure CalibUniform;
 Procedure CalibLinearRGB;
-Procedure CalibLinearComp;
 
 implementation
 
@@ -292,6 +291,7 @@ const
   labello2='  Black      Blue     Green      Cyan      Red     Magenta    Brown     Gray    ';
   labelhi1='   Dark     Light     Light     Light     Light     Light                       ';
   labelhi2='   Gray      Blue     Green      Cyan      Red     Magenta    Yellow    White   ';
+  singleLineLabel='Blck Blue Grn  Cyan Red  Mgnt Brwn LGry DGry LBlu LGrn LCya LRed LMgn Yelo Whit ';
 
 (*
   blabels:array[0..15] of string[15]=(
@@ -314,7 +314,8 @@ const
   );
 *)
 var
-  foo,fooattr:byte;
+  foo,fooattr,ba,fo,backfore:byte;
+  ad:word;
 begin
   with InfoPrompt do begin
     init(2,strpas(menuLookup[mColor].title));
@@ -340,6 +341,23 @@ begin
 
   {disable blink in text mode to gain all 16 colors for background}
   m6845_SetMode(c_fast_char_clock+c_videosignal_enable);
+  Screen.WritePlain(1,1,'All combinations of all background and foreground colors:');
+
+  for foo:=3 to 16+3-1 do
+    Screen.WritePlain(1,foo,SingleLineLabel);
+  {color them in:}
+  for ba:=0 to 15 do begin
+    fo:=0;
+    ad:=(160*2)+(160*ba);
+    for foo:=1 to 160 do begin
+      backfore:=(ba SHL 4) OR fo;
+      mem[$b800:ad+foo]:=backfore;
+      inc(foo);
+      if (foo mod 10)=0 then inc(fo);
+    end;
+
+  end;
+(*
   for foo:=0 to 7 do begin
     {build rotating text attribute byte}
     asm
@@ -377,6 +395,9 @@ begin
   for foo:=0 to 7 do Screen.WritePlain((foo*10)+1,1,' Color #'+inttostr(foo));
   for foo:=8 to 15 do Screen.WritePlain((foo*10)+1,21,' Color #'+inttostr(foo));
   {Screen.WriteCenter(25,$0F,'Hit a key to rearrange into horizontal bars.');}
+  *)
+
+
   PauseUser;
 
   Screen.clear($0e,#0);
@@ -717,64 +738,5 @@ begin
   dispose(vs,done);
   PostTest;
 end;
-
-Procedure CalibLinearComp;
-const
-  xdiv=12;
-  ydiv=20;
-  xofs=0;
-  yofs=0;
-var
-  x,y,c:word;
-  xcoll,xcolr,ycolt,ycolb:integer;
-  s:string;
-
-begin
-  with InfoPrompt do begin
-    init(2,strpas(menuLookup[mLinearComp].title));
-    WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
-    AddLine('');
-    AddLinearityText;
-    AddLine('');
-    {AddLine('The geometry in this test is for composite monitors.');}
-    AddLine('The video mode used in this test is intended for composite monitors.');
-    AddLine('');
-    SetOption(1,cstring,67,Finished);
-    SetOption(2,astring,65,Escaped);
-    Result:=Show;
-    Done;
-  end;
-  if Result=Escaped then exit;
-  Preptest;
-  vs:=new(pvidCGAGcomposite,Init(composite,true)); {compatibility=true so BIOS is called to set mode}
-  with vs^ do begin
-    {rect(0,0,width-1,height-1,maxcolors-1);
-    rect(1,1,width-2,height-2,maxcolors-1);}
-    xcoll:=(width div 2)-1; xcolr:=xcoll+1;
-    while xcoll>0 do begin
-      line(xcoll+0,0,xcoll+0,height-1,maxcolors-1);
-      line(xcoll+1,0,xcoll+1,height-1,maxcolors-1);
-      line(xcolr-0,0,xcolr-0,height-1,maxcolors-1);
-      line(xcolr-1,0,xcolr-1,height-1,maxcolors-1);
-      xcoll:=xcoll-xdiv; xcolr:=xcolr+xdiv;
-    end;
-    ycolt:=(height div 2)-1; ycolb:=ycolt+1;
-    while ycolt>0 do begin
-      line(0,ycolt+0,width-1,ycolt+0,maxcolors-1);
-      line(0,ycolt+1,width-1,ycolt+1,maxcolors-1);
-      line(0,ycolb-0,width-1,ycolb-0,maxcolors-1);
-      line(0,ycolb-1,width-1,ycolb-1,maxcolors-1);
-      ycolt:=ycolt-ydiv; ycolb:=ycolb+ydiv;
-    end;
-    PauseUser;
-    {now make a convergence pattern}
-    for xcoll:=0 to (width div 2)-1 do line(xcoll*2,0,xcoll*2,height-1,0);
-    for ycolt:=0 to (height div 2)-1 do line(0,ycolt*2,width-1,ycolt*2,0);
-    PauseUser;
-  end;
-  dispose(vs,done);
-  PostTest;
-end;
-
 
 end.

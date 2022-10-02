@@ -104,10 +104,13 @@ sync+tone at the beginning and end that you can use to detect subtle drift.
 
 DISCLAIMER:
 
-I have a vintage collection just like you, and I would never intentionally
-damage hardware.  That said, you run this program at your own risk. I cannot
-be held liable for any damage that may occur to your computer hardware by
-running any of these tests.  By using this program, you agree to these terms.
+Every effort has been made to perform safe testing.  I have a vintage
+collection just like you, and I would never intentionally damage hardware.
+
+!! That said, you run this program at your own risk. !!
+
+I cannot be held liable for any damage that may occur to your hardware by
+running these tests.  By using this program, you agree to these terms.
 
 =============================================================================
 
@@ -117,7 +120,7 @@ Limitations:
   lack of motivation.  It is implemented in text mode, and it uses the
   same methods, so this is no great loss.
 - Light pen interface not tested because I do not own a light pen.
-  Please send me a light pen.
+  Please send me a light pen.  I may even pay you handsomely for it.
 - 4 colors in 640x200 mode (yes, 640x200x4) not implemented because, while
   the *mode* works, IBM didn't implement things properly and memory is
   incompletely decoded (every other byte column is garbage).  No software
@@ -152,6 +155,7 @@ Greets go to:
   Erik of the VCF, for the amazing forums
   The OWB and TDC crews.  You know who you are.
   Chris Scussel (for always-enlightening conversation)
+  Adrian Black, for suggesting tweaks to some patterns
 
 =============================================================================
 
@@ -207,6 +211,7 @@ Version History:
         Added a yellow border that draws when audio sounds in sync test.
 1.27.0: Added camera calibration plates.
 1.27.1: Refactored to save 1k of code and 13k of RAM.
+1.28:   Menu rearrangement to be more logical; better monitor color test.
 
 Possible future enhancements:
 - Test on PCjr and ensure all tests work on PCjr

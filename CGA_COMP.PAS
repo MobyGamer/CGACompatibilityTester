@@ -28,14 +28,6 @@ uses
   {$O totwin}
   {$O totlook}
 
-    {$IFDEF DETECT}
-    {$O topb_detect}
-    {$O detectgraphics}
-    {$O detectsystem}
-    {$O detectglobal}
-    {$O cputype}
-    {$ENDIF}
-
   {$O cgacmain}
   {$O cgaccommon}
   {$O cgabtests}

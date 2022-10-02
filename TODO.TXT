@@ -1,4 +1,4 @@
-BTW you should come up with a word-wrap system.  The goofy inconsistent
+Should come up with a word-wrap system.  The goofy inconsistent
 wrapping is annoying.  I would build a pchar string in code (so that
 pchar doesn’t become part of the global segment), then pass that to
 (var) function that takes in pchar and dest string array, modifies the
