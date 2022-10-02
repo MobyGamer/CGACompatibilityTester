@@ -211,9 +211,11 @@ Version History:
         Added a yellow border that draws when audio sounds in sync test.
 1.27.0: Added camera calibration plates.
 1.27.1: Refactored to save 1k of code and 13k of RAM.
-1.28:   Menu rearrangement to be more logical.
+1.28:   Menu rearrangement to group things more logically.
         Better monitor color test suggested by Adrian Black.
         Added Multiburst test pattern.
+        New sort for capture RGB and Composite bars. (Not entirely sure
+        these capture patterns are useful; might remove them in the future.)
 
 Possible future enhancements:
 - Test on PCjr and ensure all tests work on PCjr
