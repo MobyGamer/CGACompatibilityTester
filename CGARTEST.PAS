@@ -45,7 +45,7 @@ begin
   {!Should this start with 59.92 as default?
   Any way to get more accurate on first try?}
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mVert].title));
+    init(6,strpas(menuLookup[mVert].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test will monitor the m6845 status register');
@@ -241,7 +241,7 @@ var
 
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mHoriz].title));
+    init(6,strpas(menuLookup[mHoriz].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test will monitor the m6845 status register');
@@ -379,7 +379,7 @@ var
   x,y:byte;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mTCustom90].title));
+    init(6,strpas(menuLookup[mTCustom90].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test reprograms the m6845 horizontal and vertical');
@@ -445,20 +445,18 @@ end;
 
 Procedure ShowText80x100;
 var
-  f:file;
-  fdata:pointer;
   pmda,pcgathin,pcgathick:pbyte;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mTCustom80].title));
+    init(6,strpas(menuLookup[mTCustom80].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test reprograms the maximum scanline and');
     AddLine('vertical total registers to increase the number');
     AddLine('of lines in text mode from 25 to 100.  This is');
-    AddLine('a common ''tweaked'' mode used in some CGA games');
+    AddLine('a common "tweaked" mode used in some CGA games');
     AddLine('like ICON, Seven Spirits of Ra, Round 42, Styx,');
-    AddLine('Moon Bugs, and others.  By using the ± character,');
+    AddLine('Moon Bugs, and others.  By using the "±" character,');
     AddLine('it is possible to simulate dozens of colors, a');
     AddLine('technique which will be demonstrated in this test.');
     AddLine('');
@@ -471,22 +469,16 @@ begin
   PrepTest;
 
   vs:=new(pvidCGAT80x100,Init(text80x100,true));
-  fdata:=ptr($b800,0);
-  assign(f,datafile);
-  reset(f,1);
-  seek(f,8192); {seek to where pictures start}
-  blockread(f,fdata^,16000);
+  zx0_decomp(@zx0_shadcube,ptr($b800,0));
   pauseuser;
-  blockread(f,fdata^,16000);
+  zx0_decomp(@zx0_colorf1,ptr($b800,0));
   pauseuser;
-  close(f);
   dispose(vs,done);
   PostTest;
 end;
 
 Procedure TestInterlace;
 var
-  f:file;
   fdata:pointer;
   pmda,pcgathin,pcgathick:pbyte;
   loop:byte;
@@ -511,7 +503,7 @@ var
 
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mInterlace].title));
+    init(6,strpas(menuLookup[mInterlace].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test will enable interlaced video generation');
@@ -539,10 +531,7 @@ begin
   PrepTest;
 
   getmem(fdata,8192);
-  assign(f,datafile);
-  reset(f,1);
-  blockread(f,fdata^,8192);
-  close(f);
+  zx0_decomp(@zx0_cga_font,fdata);
   pmda:=fdata; pcgathin:=pmda; pcgathick:=pmda;
   inc(word(pcgathick),6144);
   inc(word(pcgathin),4096);
@@ -574,7 +563,7 @@ var
   smsg:string;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mPos].title));
+    init(6,strpas(menuLookup[mPos].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test alters the horizontal and vertical sync');
@@ -626,7 +615,7 @@ var
   starta:word;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mAddr].title));
+    init(6,strpas(menuLookup[mAddr].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test alters the Start Address register');

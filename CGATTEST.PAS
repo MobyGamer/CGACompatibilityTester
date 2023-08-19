@@ -21,7 +21,7 @@ var
   w:word;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mTSnow].title));
+    init(6,strpas(menuLookup[mTSnow].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test writes to CGA adapter RAM in a way that');
@@ -89,7 +89,7 @@ var
   foo,fooattr:byte;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mTHCB].title));
+    init(6,strpas(menuLookup[mTHCB].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test disables the "blink" bit to enable');
@@ -135,7 +135,7 @@ var
   curs,oldcurs:word;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mTCur].title));
+    init(6,strpas(menuLookup[mTCur].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test changes the shape of the');
@@ -169,26 +169,22 @@ Procedure Test40col;
 var
   x,y:byte;
   smsg:string;
-  f:file;
 begin
   if interactive then begin
     with InfoPrompt do begin
-      init(2,strpas(menuLookup[m40col].title));
+      init(6,strpas(menuLookup[m40col].title));
       WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('This test switches into 40-column textmode.');
-      AddLine('The most common use of this test is to see');
-      AddLine('how thorough CGA "emulation" programs are.');
-      AddLine('For example, most "CGA simulator" programs');
-      AddLine('for Hercules cards do not make any attempt');
-      AddLine('at supporting 40-column mode (although this');
-      AddLine('test gives them every chance to, since only');
-      AddLine('the BIOS is used to set the mode and print');
+      AddLine('One use of this test is to see how thorough CGA "emulation"');
+      AddLine('programs are.  For example, most "CGA simulator" programs');
+      AddLine('for Hercules cards do not make any attempt at supporting');
+      AddLine('40-column mode (although this test gives them every chance');
+      AddLine('to, since the BIOS only is used to set the mode and print');
       AddLine('the sample text).');
       AddLine('');
-      AddLine('This screen also has varying widths of veritcal');
-      AddLine('and horizontal bars, making it useful for');
-      AddLine('checking for horizontal or vertical jitter.');
+      AddLine('This screen also has varying widths of vertical and');
+      AddLine('horizontal bars to check for horizontal/vertical judder.');
       AddLine('');
       SetOption(1,cstring,67,Finished);
       SetOption(2,astring,65,Escaped);
@@ -213,12 +209,7 @@ begin
   if interactive then begin
   smsg:='Press any key to exit the test.'#13#10; BIOSWriteStr(smsg);
   end;
-  assign(f,datafile);
-  reset(f,1);
-  seek(f,(8192+(16000*2)+16384+15360)); {seek to where box data is}
-
-  blockread(f,ptr($b800,40*15*2)^,40*10*2);
-  close(f);
+  zx0_decomp(@zx0_boxes,ptr($b800,40*15*2));
   PauseUser;
   PostTest;
 end;
@@ -250,12 +241,11 @@ type
   end;
 
 var
-  f:file;
   fdata:pointer;
   pmda,pcgathin,pcgathick:pbyte;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mFont].title));
+    init(6,strpas(menuLookup[mFont].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test displays a single character and then');
@@ -273,10 +263,7 @@ begin
   PrepTest;
   {set up pointers to rom font data}
   getmem(fdata,8192);
-  assign(f,datafile);
-  reset(f,1);
-  blockread(f,fdata^,8192);
-  close(f);
+  zx0_decomp(@zx0_cga_font,fdata);
   pmda:=fdata; pcgathin:=pmda; pcgathick:=pmda;
   inc(word(pcgathick),6144);
   inc(word(pcgathin),4096);

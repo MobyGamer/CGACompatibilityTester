@@ -18,7 +18,7 @@ Procedure CalibMultiburst;
 implementation
 
 uses
-  strings,m6845ctl,ztimer,support,cgaccommon,cgalib,TInterrupts,
+  strings,m6845ctl,ztimer,support,cgaccommon,cgastaticdata,cgalib,TInterrupts,
   totmenu,totIO1,totfast,totkey;
 
 Procedure CalibBrightness;
@@ -26,7 +26,7 @@ var
   foo:byte;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mBCal].title));
+    init(6,strpas(menuLookup[mBCal].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test pattern assists in calibrating');
@@ -71,7 +71,7 @@ var
   foo:byte;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mCCal].title));
+    init(6,strpas(menuLookup[mCCal].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test pattern assists in calibrating your monitor''s contrast control.');
@@ -79,7 +79,7 @@ begin
     AddLine('Use this pattern to adjust any color, saturation, or hue controls if');
     AddLine('present on your RGB output device.  The goal is to get each color as');
     AddLine('rich as possible without overdriving the monitor (ie. making the colors');
-    AddLine('"fuzzy" or blurred).');
+    AddLine('appear "fuzzy" or blurred).');
     AddLine('All text should be clear and distinct against the background.');
     AddLine('');
     BrownNote;
@@ -118,7 +118,7 @@ end;
 Procedure CalibMoire;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mMoire].title));
+    init(6,strpas(menuLookup[mMoire].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('What follows are four test patterns to help calibrate');
@@ -196,6 +196,14 @@ Procedure CalibMoireColor;
 Displays high-contrast patterns using every combination of pins:
 R+G, R+B, R+I, G+B, G+I, B+I
 }
+const
+  fillpatterns:array[0..5] of byte=(
+    $42,$41,$4f,$21,$2f,$1f
+  );
+
+var
+  b:byte;
+
   procedure fillpattern(backfore:byte); assembler;
   asm
         mov     ax,0b800h
@@ -209,7 +217,7 @@ R+G, R+B, R+I, G+B, G+I, B+I
 
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mMoire].title));
+    init(6,strpas(menuLookup[mMoire].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('What follows are six color test patterns to help calibrate');
@@ -238,31 +246,20 @@ begin
   tRed=                    c_red                   ; {04}
   *)
 
-  fillpattern($42);
-  PauseUser;
-  fillpattern($41);
-  PauseUser;
-  fillpattern($4f);
-  PauseUser;
-  fillpattern($21);
-  PauseUser;
-  fillpattern($2f);
-  PauseUser;
-  fillpattern($1f);
-  PauseUser;
+  for b:=0 to 5 do begin
+    fillpattern(fillpatterns[b]);
+    PauseUser;
+  end;
 
   PostTest;
 end;
 
 Procedure CalibAspectNTSC;
 {show test pattern with 4:3 DAR composite monitor}
-var
-  f:file;
-  fdata:pointer;
 begin
   if interactive then begin
     with InfoPrompt do begin
-      init(2,strpas(menuLookup[mAspectNTSC].title));
+      init(6,strpas(menuLookup[mAspectNTSC].title));
       WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('What follows is a classic test pattern designed to help you');
@@ -289,12 +286,7 @@ begin
     mov ax,0006h
     int 10h
   end;
-  fdata:=ptr($b800,0);
-  assign(f,datafile);
-  reset(f,1);
-  seek(f,8192+16000+16000); {seek to where aspect diag is}
-  blockread(f,fdata^,16384);
-  close(f);
+  zx0_decomp(@zx0_indiantp,ptr($b800,0));
   PauseUser;
   PostTest;
 end;
@@ -307,9 +299,47 @@ const
 var
   foo,fooattr,ba,fo,backfore,row,col:byte;
   ad:word;
+  b:byte;
+
+const
+  horizbars:array[0..(24*6)-1] of byte=(
+  {parameters for filling horizontal boxes; see fillbox() for what they do}
+    1,1,80,1,$00,0,
+    1,2,80,2,$01,220,
+    1,3,80,3,$11,0,
+
+    1,4,80,4,$22,0,
+    1,5,80,5,$23,220,
+    1,6,80,6,$33,0,
+
+    1,7,80,7,$44,0,
+    1,8,80,8,$45,220,
+    1,9,80,9,$55,0,
+
+    1,10,80,10,$66,0,
+    1,11,80,11,$67,220,
+    1,12,80,12,$77,0,
+
+    1,13,80,13,$88,0,
+    1,14,80,14,$89,220,
+    1,15,80,15,$99,0,
+
+    1,16,80,16,$aa,0,
+    1,17,80,17,$ab,220,
+    1,18,80,18,$bb,0,
+
+    1,19,80,19,$cc,0,
+    1,20,80,20,$cd,220,
+    1,21,80,21,$dd,0,
+
+    1,22,80,22,$ee,0,
+    1,23,80,23,$ef,220,
+    1,24,80,24,$ff,0
+  );
+
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mColor].title));
+    init(6,strpas(menuLookup[mColor].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('The following test pattern displays all available colors, with labels.');
@@ -347,37 +377,16 @@ begin
 
   Screen.clear($0e,#0);
   with screen do begin
-    fillbox(1,1,80,1,$00,0);
-    fillbox(1,2,80,2,$01,220);
-    fillbox(1,3,80,3,$11,0);
-
-    fillbox(1,4,80,4,$22,0);
-    fillbox(1,5,80,5,$23,220);
-    fillbox(1,6,80,6,$33,0);
-
-    fillbox(1,7,80,7,$44,0);
-    fillbox(1,8,80,8,$45,220);
-    fillbox(1,9,80,9,$55,0);
-
-    fillbox(1,10,80,10,$66,0);
-    fillbox(1,11,80,11,$67,220);
-    fillbox(1,12,80,12,$77,0);
-
-    fillbox(1,13,80,13,$88,0);
-    fillbox(1,14,80,14,$89,220);
-    fillbox(1,15,80,15,$99,0);
-
-    fillbox(1,16,80,16,$aa,0);
-    fillbox(1,17,80,17,$ab,220);
-    fillbox(1,18,80,18,$bb,0);
-
-    fillbox(1,19,80,19,$cc,0);
-    fillbox(1,20,80,20,$cd,220);
-    fillbox(1,21,80,21,$dd,0);
-
-    fillbox(1,22,80,22,$ee,0);
-    fillbox(1,23,80,23,$ef,220);
-    fillbox(1,24,80,24,$ff,0);
+    for b:=0 to 24-1 do begin
+       fillbox(
+       horizbars[(b*6)+0],
+       horizbars[(b*6)+1],
+       horizbars[(b*6)+2],
+       horizbars[(b*6)+3],
+       horizbars[(b*6)+4],
+       horizbars[(b*6)+5]
+       );
+    end;
   end;
 
   {Screen.WriteCenter(25,$0F,'Hit a key to rearrange into vertical bars.');}
@@ -418,7 +427,7 @@ var
 
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mMono].title));
+    init(6,strpas(menuLookup[mMono].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('The following test pattern displays all available CGA colors arranged');
@@ -526,7 +535,7 @@ var
   sp:pointer;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mUniform].title));
+    init(6,strpas(menuLookup[mUniform].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('The following screens allow you to inspect your RGB monitor');
@@ -626,7 +635,7 @@ var
   s:string;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mLinearRGB].title));
+    init(6,strpas(menuLookup[mLinearRGB].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test helps measure monitor linearity and convergence.');
@@ -686,7 +695,7 @@ var
   x,barw,cols:integer;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mLinearRGB].title));
+    init(6,strpas(menuLookup[mLinearRGB].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test simulates a traditional multiburst test pattern,');

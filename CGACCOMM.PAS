@@ -41,7 +41,6 @@ const
     whichCGA pic:         15360 bytes
     boxdata:                800 bytes
   }
-  datafile='cga_comp.dat';
   menuLookup:menuArray=(
     (id:10; {mBMR} title:'Block Memory Read';
     blurb:'Adapter RAM read speeds'),
@@ -156,12 +155,12 @@ Procedure BIOSGotoXY(x,y:byte); {Positions the cursor}
 Procedure PauseUser;
 Procedure DrawTestplate;
 Procedure PrintInvalidMsg;
+Function  zx0_decomp(inb,outb:pointer):word;
 
 implementation
 
 uses
-  m6845ctl,totfast,tinterrupts,support{,cgalib_g};
-
+  m6845ctl,totfast,tinterrupts,support;
 
 Procedure PrintInvalidMsg;
 begin
@@ -257,6 +256,18 @@ asm
         int     10h
 end;
 
+Procedure zx0_decompress_speed; external;
+{$L zx0_8086.obj}
+
+Function zx0_decomp(inb,outb:pointer):word; assembler;
+asm
+        push    ds
+        lds     si,inb
+        les     di,outb
+        call    zx0_decompress_speed
+        pop     ds
+end;
+
 begin
   {set informational box colors}
   descBorder:=cattr(tWhite,tBlue);
@@ -264,4 +275,3 @@ begin
   descTitle:=cattr(tYellow,tBlue);
   descIcons:=cattr(tLightRed,tBlue);
 end.
-

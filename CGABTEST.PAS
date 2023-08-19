@@ -36,7 +36,7 @@ const
   BlockSize=$2000;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mBMR].title));
+    init(6,strpas(menuLookup[mBMR].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This benchmarks your video adapter RAM''s maximum read');
@@ -74,7 +74,7 @@ const
   BlockSize=$2000;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mBMW].title));
+    init(6,strpas(menuLookup[mBMW].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This benchmarks your video adapter RAM''s maximum write');
@@ -112,7 +112,7 @@ const
   BlockSize=$1000;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mOARB].title));
+    init(6,strpas(menuLookup[mOARB].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This benchmarks your video adapter RAM''s read speed');
@@ -160,7 +160,7 @@ const
   BlockSize=$1000;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mOAWB].title));
+    init(6,strpas(menuLookup[mOAWB].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This benchmarks your video adapter RAM''s write speed');

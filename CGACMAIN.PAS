@@ -57,7 +57,7 @@ const
   AboutText:array[0..AboutTextLines+1] of pChar=(
     '',
     ' The CGA Compatibility Tester',
-    ' Version 1.28, 20221001',
+    ' Version 1.3, 20230818',
     ' by Jim Leonard (trixter@oldskool.org) ',
     ''
   );
@@ -101,8 +101,6 @@ var
   actloop:userActions;
   loop:byte;
 begin
-  if not fileexists(datafile) then fatalerror(3,'Data file "'+datafile+'" not found.');
-
   {determine if we are doing the full interactive interface,
   or going to fire up individual tests}
   if paramcount<>0 then interactive:=false;

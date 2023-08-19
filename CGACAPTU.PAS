@@ -32,7 +32,7 @@ var
 begin
   if interactive then begin
     with InfoPrompt do begin
-      init(2,strpas(menuLookup[mCapMotion].title));
+      init(6,strpas(menuLookup[mCapMotion].title));
       WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('This test plate consists of two moving lines,');
@@ -133,7 +133,7 @@ var
   b,barwidth:byte;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mCapBarsRGB].title));
+    init(6,strpas(menuLookup[mCapBarsRGB].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This pattern consists of all sixteen RGB colors,');
@@ -168,7 +168,7 @@ var
 begin
   if interactive then begin
     with InfoPrompt do begin
-      init(2,strpas(menuLookup[mCapRGBI].title));
+      init(6,strpas(menuLookup[mCapRGBI].title));
       WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('This pattern consists of RED, GREEN, BLUE, and WHITE bars.');
@@ -211,7 +211,7 @@ var
 begin
   if interactive then begin
     with InfoPrompt do begin
-      init(2,strpas(menuLookup[mCapBarsComp].title));
+      init(6,strpas(menuLookup[mCapBarsComp].title));
       WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('This pattern consists of 16 solid composite colors,');
@@ -366,7 +366,6 @@ const
 type
   pbyte=^byte;
 var
-  f:file;
   fdata:pointer;
   pmda,pcgathin,pcgathick:pbyte;
   s,it,ss:string;
@@ -414,16 +413,15 @@ var
 begin
   if interactive then begin
     with InfoPrompt do begin
-      init(2,strpas(menuLookup[mSync].title));
+      init(6,strpas(menuLookup[mSync].title));
       WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
-      AddLine('This test sequence is designed to detect missing frames');
-      AddLine('during video capture, and also detect audio sync drift.');
+      AddLine('This test sequence is designed to detect missing frames during');
+      AddLine('video capture, and also detect audio sync drift.');
       AddLine('To use, start your capture process, then begin this test.');
-      AddLine('Capture at least 10 minutes, then load the resulting video');
-      AddLine('into a video editor that counts frames (such as virtualdub)');
-      AddLine('and look for discrepancies between the displayed and captured');
-      AddLine('frame numbering.');
+      AddLine('Capture at least 10 minutes, then load the resulting video into');
+      AddLine('a video editor that counts frames (such as virtualdub) and look');
+      AddLine('for discrepancies between displayed and captured frame numbers.');
       AddLine('');
       br:=60000/1001;
       str(br:2:4,ss);
@@ -456,10 +454,7 @@ begin
   PrepTest;
   {set up pointers to rom font data}
   getmem(fdata,8192);
-  assign(f,datafile);
-  reset(f,1);
-  blockread(f,fdata^,8192);
-  close(f);
+  zx0_decomp(@zx0_cga_font,fdata);
   pmda:=fdata; pcgathin:=pmda; pcgathick:=pmda;
   inc(word(pcgathick),6144);
   inc(word(pcgathin),4096);
@@ -521,7 +516,7 @@ const
 begin
   if interactive then begin
     with InfoPrompt do begin
-      init(2,strpas(menuLookup[mCapBarsComp].title));
+      init(6,strpas(menuLookup[mCapBarsComp].title));
       WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
       AddLine('');
       AddLine('This section shows three calibration screens: Pure black,');

@@ -39,7 +39,7 @@ end;
 Procedure TestBorder;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mBCol].title));
+    init(6,strpas(menuLookup[mBCol].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test alters the M6845 Color Select Register');
@@ -71,7 +71,7 @@ var
   smsg:string;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mMCol].title));
+    init(6,strpas(menuLookup[mMCol].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test alters the M6845 Color Select Register while');
@@ -109,7 +109,7 @@ var
   smsg:string;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mHCol].title));
+    init(6,strpas(menuLookup[mHCol].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test alters the M6845 Color Select Register while');
@@ -149,7 +149,7 @@ var
   smsg:string;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mPal].title));
+    init(6,strpas(menuLookup[mPal].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('This test displays all six CGA foreground palettes');

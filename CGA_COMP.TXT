@@ -1,6 +1,7 @@
 The CGA Compatibility Tester
 by trixter@oldskool.org
-http://www.oldskool.org/pc/cgacomp
+background: http://www.oldskool.org/pc/cgacomp
+    github: https://github.com/MobyGamer/CGACompatibilityTester
 
 The CGA Compatibility Tester, as its name implies, is a program that
 benchmarks and stresses nearly every capability of the IBM Color Graphics
@@ -11,9 +12,9 @@ Adapter (CGA).  This can be used to:
 - Calibrate your capture solution (or camera) for accurate colors and motion
 - Benchmark adapter RAM speed
 - Satisfy your curiosity about how CGA can be tweaked
-- Display neato 16-color transparent raster bars through the power of awesome
+- Display transparent color raster bars through the power of sheer awesomeness
   (see the horizontal retrace detection test)
-- Display 640x200x16 graphics the likes of which you have never seen
+- Display 640x200x16 graphics on a stock CGA card
   (see the textmode row reprogramming test)
 
 Testing Features:
@@ -216,6 +217,10 @@ Version History:
         Added Multiburst test pattern.
         New sort for capture RGB and Composite bars. (Not entirely sure
         these capture patterns are useful; might remove them in the future.)
+1.3:    Compressed external data assets and embedded them in the main
+        program, so CGA_COMP.DAT is no longer required, making CGA_COMP.EXE
+        the only file necessary to perform testing.
+        Made information dialogs easier to read and less cluttered.
 
 Possible future enhancements:
 - Test on PCjr and ensure all tests work on PCjr

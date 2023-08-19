@@ -11,7 +11,7 @@ Procedure LoGrafColors;
 implementation
 
 uses
-  strings,m6845ctl,ztimer,support,cgaccommon,cgalib,TInterrupts,
+  strings,m6845ctl,ztimer,support,cgaccommon,cgastaticdata,cgalib,TInterrupts,
   totmsg,totinput,totIO1,totfast;
 
 const
@@ -22,12 +22,9 @@ procedure show_oldornew; external; {$L oldornew.obj}
 Procedure DetermineCardType;
 const
   scrsize=40*192*2;
-var
-  f:file;
-  fdata:pointer;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mCompWhich].title));
+    init(6,strpas(menuLookup[mCompWhich].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('IBM issued two basic models of CGA cards, which had slightly');
@@ -41,7 +38,7 @@ begin
     AddLine('');
     AddLine('This test pattern helps determine which CGA card model is');
     AddLine('installed.  The display will change to an image with the words');
-    AddLine('"OLD" and "NEW" overlaid on top of each other.  The word that');
+    AddLine('OLD and NEW overlaid on top of each other.  The word that');
     AddLine('appears most distinct indicates the type of card installed.');
     AddLine('');
     AddLine('THE KEYBOARD IS DISABLED WHILE THE TEST PATTERN IS DISPLAYED.');
@@ -59,12 +56,7 @@ begin
         mov     ax,0001h
         int     10h
   end;
-  fdata:=ptr($b800,0);
-  assign(f,datafile);
-  reset(f,1);
-  seek(f,8192+16000+16000+16384); {seek to where screen is}
-  blockread(f,fdata^,scrsize);
-  close(f);
+  zx0_decomp(@zx0_whichcga,ptr($b800,0));
   asm
         mov     ax,0b800h
         mov     es,ax
@@ -135,7 +127,7 @@ var
 
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mCompLo].title));
+    init(6,strpas(menuLookup[mCompLo].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('What follows is a simple color test plate');
@@ -224,7 +216,7 @@ var
   s:string;
 begin
   with InfoPrompt do begin
-    init(2,strpas(menuLookup[mCompHi].title));
+    init(6,strpas(menuLookup[mCompHi].title));
     WinForm^.vWinPtr^.SetColors(descBorder,descBody,descTitle,descIcons);
     AddLine('');
     AddLine('What follows is a simple color test plate using the most');
