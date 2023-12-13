@@ -221,6 +221,7 @@ Version History:
         program, so CGA_COMP.DAT is no longer required, making CGA_COMP.EXE
         the only file necessary to perform testing.
         Made information dialogs easier to read and less cluttered.
+1.31:   Fixed multiburst pattern only working once per program start.
 
 Possible future enhancements:
 - Test on PCjr and ensure all tests work on PCjr

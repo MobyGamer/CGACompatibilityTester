@@ -57,7 +57,7 @@ const
   AboutText:array[0..AboutTextLines+1] of pChar=(
     '',
     ' The CGA Compatibility Tester',
-    ' Version 1.3, 20230818',
+    ' Version 1.31, 20231213',
     ' by Jim Leonard (trixter@oldskool.org) ',
     ''
   );

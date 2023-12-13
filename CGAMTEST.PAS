@@ -690,9 +690,9 @@ end;
 Procedure CalibMultiburst;
 const
   accel=0.05;
-  thickness:real=0.05;
 var
   x,barw,cols:integer;
+  thickness:real;
 begin
   with InfoPrompt do begin
     init(6,strpas(menuLookup[mLinearRGB].title));
@@ -711,6 +711,7 @@ begin
   if Result=Escaped then exit;
   Preptest;
   vs:=new(pvidCGAGmode6,Init(mode6,true));
+  thickness:=0.05;
   with vs^ do begin
     box(0,0,width-1,height-1,maxcolors-1);
     x:=width-1;
