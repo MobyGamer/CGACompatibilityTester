@@ -432,9 +432,9 @@ begin
     AddLine('');
     AddLine('The following test pattern displays all available CGA colors arranged');
     AddLine('in two luminance ramps meant to calibrate monochrome monitors connected');
-    AddLine('to compatible display adapters.  (These adapters emulate CGA by');
-    AddLine('converting colors into 8 or 16 shades of gray for output');
-    AddLine('on either a standard or specialized monochrome monitor.)');
+    AddLine('to compatible display adapters.  (These adapters emulate CGA by converting');
+    AddLine('colors into 8 or 16 monochrome shades for output on either a standard or');
+    AddLine('specialized monochrome monitor.)');
     AddLine('');
     AddLine('On this test plate, the brightness control affects all 16 boxes,');
     AddLine('but the contrast contol should affect only the lower 8 boxes.');
@@ -505,9 +505,18 @@ begin
     3:move(grayrampUnknown2,grayramp,sizeof(grayramp));
   end;
 
-
   {disable blink in text mode to gain all 16 colors for background}
   m6845_SetMode(c_fast_char_clock+c_videosignal_enable);
+
+  {If M24, produce a special ramp that should make it easier to calibrate
+  all 16 monochrome green shades}
+  Screen.clear($07,#0);
+  if choice=1 then begin
+    for foo:=1 to 15 do
+      Screen.FillBox((foo*5)+1,1,(foo*5)+5,24,grayramp[foo] AND $F0,0);
+    Screen.WriteCenter(25,$0F,'°±² ºð These bars represent all 16 monochrome shades from dark to white ðº ²±°');
+    PauseUser;
+  end;
 
   {color attribute 0 is a special case to the TTOT libary, unfortunately,
   so we need to work around it by using a non-zero attribute.  Can't use

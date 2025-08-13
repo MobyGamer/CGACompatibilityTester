@@ -222,6 +222,7 @@ Version History:
         the only file necessary to perform testing.
         Made information dialogs easier to read and less cluttered.
 1.31:   Fixed multiburst pattern only working once per program start.
+1.32:   Better monitor adjustment pattern for M24/6300/6060 monochrome CRTs
 
 Possible future enhancements:
 - Test on PCjr and ensure all tests work on PCjr
