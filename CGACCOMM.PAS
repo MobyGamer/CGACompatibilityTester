@@ -153,6 +153,7 @@ Procedure PostTest; {recovers after a test}
 Procedure BIOSWriteStr(var s:string); {prints a string using only the BIOS}
 Procedure BIOSGotoXY(x,y:byte); {Positions the cursor}
 Procedure PauseUser;
+Procedure WaitHSyncPeriods(periods:word);
 Procedure DrawTestplate;
 Procedure PrintInvalidMsg;
 Function  zx0_decomp(inb,outb:pointer):word;
@@ -161,6 +162,28 @@ implementation
 
 uses
   m6845ctl,totfast,tinterrupts,support;
+
+Procedure WaitHSyncPeriods(periods:word);assembler;
+{Wait for the requested number of uninterrupted horizontal blanking periods.}
+asm
+  mov   cx,periods
+  jcxz  @done
+  pushf
+  cli
+  mov   dx,m6845_status
+  mov   ah,c_display_enable
+@display:
+  in    al,dx
+  test  al,ah
+  jnz   @display       {wait until the display is active}
+@blanking:
+  in    al,dx
+  test  al,ah
+  jz    @blanking      {wait until display is not active}
+  loop  @display
+  popf
+@done:
+end;
 
 Procedure PrintInvalidMsg;
 begin
