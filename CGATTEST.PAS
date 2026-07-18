@@ -159,9 +159,29 @@ begin
   Screen.Write('Top-and-bottom dual line cursor: '); m6845_SetCursorSize($0601);
   PauseUser; Screen.Writeln('');
   Screen.Write('Strikethrough cursor: '); m6845_SetCursorSize($0503);
+  PauseUser; Screen.Writeln(''); m6845_SetCursorSize($0607);
+  Screen.Write('Full block cursor (Flag Test): ');
+  m6845_SetCursorSize($060F);
+  WaitHSyncPeriods(16);
+  m6845_SetCursorSize($0E0F);
+  PauseUser; Screen.Writeln(''); m6845_SetCursorSize($0607);
+  Screen.Write('Disabled cursor (Flag Test): ');
+  m6845_SetCursorSize($0E07);
+  WaitHSyncPeriods(16);
+  m6845_SetCursorSize($0E0F);
+  PauseUser; Screen.Writeln(''); m6845_SetCursorSize($0607);
+  Screen.Write('Cursor Blink Coincidence (Disabled): ');
+  m6845_SetRegData(m6845_cursor_start, $26);
+  PauseUser; Screen.Writeln('');
+  Screen.Write('Cursor Blink Coincidence (Normal Blink): ');
+  m6845_SetRegData(m6845_cursor_start, $46);
+  PauseUser; Screen.Writeln('');
+  Screen.Write('Cursor Blink Coincidence (Slow Blink): ');
+  m6845_SetRegData(m6845_cursor_start, $66);
   PauseUser; Screen.Writeln('');
   Screen.Write('Back to regular cursor: '); m6845_SetCursorSize($0607);
   PauseUser;
+
   PostTest;
 end;
 
